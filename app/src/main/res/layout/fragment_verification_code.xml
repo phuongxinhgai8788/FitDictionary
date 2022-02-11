@@ -5,7 +5,7 @@
     android:id="@+id/parent_constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VerificationCodeFragment">
+    tools:context=".confirm_code_screen.VerificationCodeFragment">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
@@ -18,8 +18,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:id="@+id/back_constraint_confirm_pass"
             android:layout_marginStart="20dp"
-            android:background="@drawable/background_prev_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -37,7 +37,7 @@
             android:id="@+id/confirm_email_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/confirm_email"
+            android:text="@string/confirm_code"
             android:textColor="@color/black"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -75,26 +75,97 @@
         app:layout_constraintStart_toStartOf="@+id/confirm_code_enter"
         app:layout_constraintTop_toBottomOf="@id/confirm_code_enter"
         android:layout_marginTop="10dp"
-        android:id="@+id/alert_confirm_email"/>
+        android:id="@+id/alert_confirm_code"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:id="@+id/count_constraint_confirm_email"
+                android:id="@+id/count_constraint_confirm_code"
                 android:layout_marginStart="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/confirm_code_enter"
                 android:layout_marginTop="50dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:id="@+id/count_tv_confirm_eamil"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+                <TextView
+                    android:id="@+id/count_tv_confirm_code"
+                    android:layout_width="6dp"
+                    android:layout_height="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/new_password_space"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/count_constraint_confirm_code">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/new_password_et"
+            android:inputType="textPassword"
+            android:hint="@string/new_password"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/see_new_password"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/see_new_password"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/new_password_space"
+        app:layout_constraintTop_toBottomOf="@id/new_password_space"
+        android:layout_marginTop="10dp"
+        android:id="@+id/alert_new_password"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/confirm_password_space"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintStart_toStartOf="@+id/new_password_space"
+        app:layout_constraintEnd_toEndOf="@+id/new_password_space"
+        app:layout_constraintTop_toBottomOf="@+id/new_password_space">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/confirm_password_et"
+            android:inputType="textPassword"
+            android:hint="@string/confirm_new_password"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/see_confirm_new_pass"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/see_confirm_new_pass"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/confirm_password_space"
+        app:layout_constraintTop_toBottomOf="@id/confirm_password_space"
+        android:layout_marginTop="10dp"
+        android:id="@+id/alert_confirm_password"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/ok_bar_confirm_email"
