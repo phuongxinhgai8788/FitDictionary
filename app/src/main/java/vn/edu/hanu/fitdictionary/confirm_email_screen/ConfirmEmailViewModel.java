@@ -1,5 +1,6 @@
 package vn.edu.hanu.fitdictionary.confirm_email_screen;
 
+import android.util.Log;
 import android.util.Patterns;
 
 import androidx.lifecycle.LiveData;

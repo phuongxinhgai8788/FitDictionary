@@ -1,6 +1,6 @@
 package vn.edu.hanu.fitdictionary.helper;
 
-import vn.edu.hanu.fitdictionary.confirm_code_screen.VerificationCodeFragment;
+import vn.edu.hanu.fitdictionary.verification_code_screen.VerificationCodeFragment;
 
 public class CountDownTimer extends android.os.CountDownTimer {
     private VerificationCodeFragment hostFragment;

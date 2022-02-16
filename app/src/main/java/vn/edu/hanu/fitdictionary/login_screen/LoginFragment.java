@@ -15,11 +15,13 @@ import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.text.method.TransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,10 +81,10 @@ public class LoginFragment extends Fragment {
         loginConstraint.setEnabled(false);
         loginViewModel.isEmailValidate.observe(getViewLifecycleOwner(), data -> {
             if (!data) {
-                alertEmailTV.setText("Wrong HANU email format");
+                alertEmailTV.setText("Hanu email format @s.hanu.edu.vn is required");
                 alertEmailTV.setTextColor(Color.RED);
             } else {
-                alertEmailTV.setText("Correct HANU email format");
+                alertEmailTV.setText("Correct Hanu email format");
                 alertEmailTV.setTextColor(Color.BLACK);
             }
         });
@@ -116,7 +118,6 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                passwordIV.setImageResource(R.mipmap.ic_hide_pass_foreground);
                 emailEntered = s.toString();
                 loginViewModel.onEmailChanged(s, start, before, count);
 
@@ -135,7 +136,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                passwordIV.setImageResource(R.mipmap.ic_hide_pass_foreground);
                 passwordEntered = s.toString();
                 loginViewModel.onPasswordChanged(s, start, before, count);
             }

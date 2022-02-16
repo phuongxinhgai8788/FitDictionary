@@ -11,4 +11,8 @@
     <color name="orange">#F7A742</color>
     <color name="red">#F4111B</color>
     <color name="background">#F3D57F</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#6200EE</color>
+    <color name="colorAccent">#000000</color>
+    <color name="nice">#e67d20</color>
 </resources>

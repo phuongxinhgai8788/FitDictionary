@@ -1,4 +1,4 @@
-package vn.edu.hanu.fitdictionary.confirm_code_screen;
+package vn.edu.hanu.fitdictionary.verification_code_screen;
 
 import android.content.Context;
 import android.graphics.Color;

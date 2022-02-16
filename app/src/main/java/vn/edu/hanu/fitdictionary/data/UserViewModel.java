@@ -22,4 +22,12 @@ public class UserViewModel extends ViewModel {
 
     public void updateUser(User user) {
     }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+    }
+
+    public void saveUser(User savedUser) {
+    }
 }
