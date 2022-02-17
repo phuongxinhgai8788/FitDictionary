@@ -13,16 +13,17 @@ import android.view.ViewGroup;
 
 import vn.edu.hanu.fitdictionary.MainActivity;
 import vn.edu.hanu.fitdictionary.R;
+import vn.edu.hanu.fitdictionary.helper.RenderFragment;
+import vn.edu.hanu.fitdictionary.login_screen.LoginFragment;
+import vn.edu.hanu.fitdictionary.register_screen.RegisterFragment;
 
 
 public class IntroduceFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     private ConstraintLayout loginConstraint;
     private ConstraintLayout signUpConstraint;
     private Context context;
+    private RenderFragment renderFragment;
 
     public IntroduceFragment() {
         // Required empty public constructor
@@ -38,6 +39,7 @@ public class IntroduceFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
+        this.renderFragment = (RenderFragment) context;
     }
 
     @Override
@@ -55,10 +57,12 @@ public class IntroduceFragment extends Fragment {
         super.onStart();
         MainActivity mainActivity = (MainActivity) context;
         loginConstraint.setOnClickListener(v -> {
-            mainActivity.renderLoginFragment();
+            LoginFragment loginFragment = LoginFragment.newInstance();
+            renderFragment.openFragment(loginFragment, true);
         });
         signUpConstraint.setOnClickListener(v -> {
-            mainActivity.renderSignUpFragment();
+            RegisterFragment registerFragment = RegisterFragment.newInstance();
+            renderFragment.openFragment(registerFragment, true);
         });
     }
 }

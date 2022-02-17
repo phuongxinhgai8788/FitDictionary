@@ -28,6 +28,8 @@ import vn.edu.hanu.fitdictionary.MainActivity;
 import vn.edu.hanu.fitdictionary.R;
 import vn.edu.hanu.fitdictionary.data.User;
 import vn.edu.hanu.fitdictionary.data.UserViewModel;
+import vn.edu.hanu.fitdictionary.helper.RenderFragment;
+import vn.edu.hanu.fitdictionary.login_screen.LoginFragment;
 
 
 public class RegisterFragment extends Fragment {
@@ -40,7 +42,6 @@ public class RegisterFragment extends Fragment {
     private RegisterViewModel registerViewModel;
     private UserViewModel userViewModel;
     private Context context;
-    private MainActivity mainActivity;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -57,7 +58,6 @@ public class RegisterFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
-        mainActivity = (MainActivity) context;
     }
 
     @Override
@@ -181,7 +181,7 @@ public class RegisterFragment extends Fragment {
         });
         
         backConstraint.setOnClickListener(v -> {
-            mainActivity.onBackPressed();
+            getActivity().onBackPressed();
         });
     }
 
@@ -196,7 +196,9 @@ public class RegisterFragment extends Fragment {
                 savedUser.setRole("STUDENT");
                 savedUser.setPassword(passwordEntered);
                 userViewModel.saveUser(savedUser);
-                mainActivity.renderLoginFragment();
+                RenderFragment renderFragment = (RenderFragment) context;
+                LoginFragment loginFragment = LoginFragment.newInstance();
+                renderFragment.openFragment(loginFragment, true);
             }else{
                 Toast.makeText(context, "User already exists", Toast.LENGTH_SHORT).show();
             }

@@ -25,10 +25,12 @@ import android.widget.Toast;
 
 import vn.edu.hanu.fitdictionary.MainActivity;
 import vn.edu.hanu.fitdictionary.R;
+import vn.edu.hanu.fitdictionary.UserHomeFragment;
 import vn.edu.hanu.fitdictionary.data.User;
 import vn.edu.hanu.fitdictionary.data.UserViewModel;
 import vn.edu.hanu.fitdictionary.helper.CountDownTimer;
 import vn.edu.hanu.fitdictionary.helper.JavaMailAPI;
+import vn.edu.hanu.fitdictionary.helper.RenderFragment;
 
 
 public class VerificationCodeFragment extends Fragment {
@@ -220,8 +222,9 @@ public class VerificationCodeFragment extends Fragment {
             } else {
                 user.setPassword(newPassEntered);
                 userViewModel.updateUser(user);
-                    MainActivity mainActivity = (MainActivity) context;
-                    mainActivity.renderLoginFragment();
+                UserHomeFragment userHomeFragment = UserHomeFragment.newInstance(user);
+                    RenderFragment mainActivity = (RenderFragment) context;
+                    mainActivity.openFragment(userHomeFragment, true);
                 }
 
         });

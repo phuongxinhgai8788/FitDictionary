@@ -27,7 +27,12 @@ import android.widget.Toast;
 
 import vn.edu.hanu.fitdictionary.MainActivity;
 import vn.edu.hanu.fitdictionary.R;
+import vn.edu.hanu.fitdictionary.UserHomeFragment;
+import vn.edu.hanu.fitdictionary.confirm_email_screen.ConfirmEmailFragment;
+import vn.edu.hanu.fitdictionary.data.User;
 import vn.edu.hanu.fitdictionary.data.UserViewModel;
+import vn.edu.hanu.fitdictionary.databinding.FragmentForgotPasswordBinding;
+import vn.edu.hanu.fitdictionary.helper.RenderFragment;
 
 
 public class LoginFragment extends Fragment {
@@ -38,6 +43,7 @@ public class LoginFragment extends Fragment {
     private TextView forgotPassTV, alertEmailTV, alertPasswordTV;
     private ImageView passwordIV;
     private Context context;
+    private RenderFragment renderFragment;
     private String emailEntered,  passwordEntered;
     private LoginViewModel loginViewModel;
     private UserViewModel userViewModel;
@@ -55,6 +61,7 @@ public class LoginFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
+        this.renderFragment = (RenderFragment) context;
     }
 
     @Override
@@ -157,7 +164,8 @@ public class LoginFragment extends Fragment {
             }
         });
         forgotPassTV.setOnClickListener(v -> {
-            mainActivity.renderForgotPasswordFragment();
+            ConfirmEmailFragment confirmEmailFragment = ConfirmEmailFragment.newInstance();
+            renderFragment.openFragment(confirmEmailFragment, true);
         });
 
         loginConstraint.setOnClickListener(v -> {
@@ -181,9 +189,8 @@ public class LoginFragment extends Fragment {
                 if(!password.equals(passwordEntered)){
                     Toast.makeText(context,"Password does not match", Toast.LENGTH_SHORT).show();
                 }else{
-                    MainActivity mainActivity = (MainActivity) context;
-                    mainActivity.setUser(user);
-                    mainActivity.renderUserHomeFragment();
+                    UserHomeFragment userHomeFragment = UserHomeFragment.newInstance(user);
+                    renderFragment.openFragment(userHomeFragment, true);
                 }
             }
         });

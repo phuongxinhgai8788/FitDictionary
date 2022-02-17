@@ -25,6 +25,8 @@ import vn.edu.hanu.fitdictionary.R;
 import vn.edu.hanu.fitdictionary.data.User;
 import vn.edu.hanu.fitdictionary.data.UserViewModel;
 import vn.edu.hanu.fitdictionary.helper.JavaMailAPI;
+import vn.edu.hanu.fitdictionary.helper.RenderFragment;
+import vn.edu.hanu.fitdictionary.verification_code_screen.VerificationCodeFragment;
 
 
 public class ConfirmEmailFragment extends Fragment {
@@ -136,8 +138,9 @@ public class ConfirmEmailFragment extends Fragment {
             } else {
                 this.user = user;
                 sendEmail();
-                mainActivity.setUser(user);
-                mainActivity.renderVerificationCodeFragment(code);
+                VerificationCodeFragment verificationCodeFragment = VerificationCodeFragment.newInstance(user, code);
+                RenderFragment renderFragment = (RenderFragment) context;
+                renderFragment.openFragment(verificationCodeFragment, true);
             }
         });
     }
