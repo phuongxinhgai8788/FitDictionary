@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements RenderFragment {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        IntroduceFragment introduceFragment = IntroduceFragment.newInstance();
+        LoginFragment introduceFragment = LoginFragment.newInstance();
         openFragment(introduceFragment, false);
 
     }

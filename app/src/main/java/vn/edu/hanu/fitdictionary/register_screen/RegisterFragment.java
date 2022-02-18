@@ -42,6 +42,7 @@ public class RegisterFragment extends Fragment {
     private RegisterViewModel registerViewModel;
     private UserViewModel userViewModel;
     private Context context;
+    private RenderFragment renderFragment;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -58,6 +59,7 @@ public class RegisterFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
+        this.renderFragment = (RenderFragment) context;
     }
 
     @Override
@@ -65,7 +67,8 @@ public class RegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register, container, false);
-        backConstraint = view.findViewById(R.id.back_constraint_sign_up);
+//        backConstraint = view.findViewById(R.id.back_constraint_sign_up);
+        seePassIV = view.findViewById(R.id.see_pass_login);
         signUpConstraint = view.findViewById(R.id.signup_btn);
         emailET = view.findViewById(R.id.email_address_et_signup);
         passwordET = view.findViewById(R.id.password_et_signup);
@@ -165,7 +168,7 @@ public class RegisterFragment extends Fragment {
             }
         });
         
-        alertPasswordTV.setOnClickListener( v -> {
+        seePassIV.setOnClickListener( v -> {
             TransformationMethod showOrHide = passwordET.getTransformationMethod();
             if(showOrHide == null || showOrHide == PasswordTransformationMethod.getInstance()){
                 passwordET.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
@@ -180,8 +183,12 @@ public class RegisterFragment extends Fragment {
             confirmUser();
         });
         
-        backConstraint.setOnClickListener(v -> {
-            getActivity().onBackPressed();
+//        backConstraint.setOnClickListener(v -> {
+//            getActivity().onBackPressed();
+//        });
+        getView().findViewById(R.id.login_switch).setOnClickListener(v -> {
+            LoginFragment loginFragment = LoginFragment.newInstance();
+            renderFragment.openFragment(loginFragment, true);
         });
     }
 

@@ -101,7 +101,7 @@ public class ConfirmEmailFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        backConstraint.setOnClickListener(v -> {
+        getView().findViewById(R.id.cancel_reset_password).setOnClickListener(v -> {
             mainActivity.onBackPressed();
         });
         emailET.addTextChangedListener( new TextWatcher(){

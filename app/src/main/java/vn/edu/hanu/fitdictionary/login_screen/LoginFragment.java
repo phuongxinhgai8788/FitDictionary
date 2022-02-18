@@ -25,6 +25,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import vn.edu.hanu.fitdictionary.MainActivity;
 import vn.edu.hanu.fitdictionary.R;
 import vn.edu.hanu.fitdictionary.UserHomeFragment;
@@ -33,6 +35,7 @@ import vn.edu.hanu.fitdictionary.data.User;
 import vn.edu.hanu.fitdictionary.data.UserViewModel;
 import vn.edu.hanu.fitdictionary.databinding.FragmentForgotPasswordBinding;
 import vn.edu.hanu.fitdictionary.helper.RenderFragment;
+import vn.edu.hanu.fitdictionary.register_screen.RegisterFragment;
 
 
 public class LoginFragment extends Fragment {
@@ -69,7 +72,7 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        backConstraint = view.findViewById(R.id.back_constraint_login);
+//        backConstraint = view.findViewById(R.id.back_constraint_login);
         emailET = view.findViewById(R.id.email_address_et_login);
         passwordET = view.findViewById(R.id.password_et_login);
         forgotPassTV = view.findViewById(R.id.forgot_pass_login);
@@ -169,13 +172,18 @@ public class LoginFragment extends Fragment {
         });
 
         loginConstraint.setOnClickListener(v -> {
-
                 confirmUser();
 
         });
 
-        backConstraint.setOnClickListener(v -> {
-            mainActivity.onBackPressed();
+//        backConstraint.setOnClickListener(v -> {
+//            mainActivity.onBackPressed();
+//        });
+
+        //sign up
+        getView().findViewById(R.id.signup_switch).setOnClickListener(v -> {
+            RegisterFragment registerFragment = RegisterFragment.newInstance();
+            renderFragment.openFragment(registerFragment, true);
         });
     }
 
