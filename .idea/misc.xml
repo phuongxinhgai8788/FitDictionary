@@ -3,6 +3,30 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable-v24/rounded_corner.xml" value="0.1305" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable/background.xml" value="0.1305" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable/background_back_constraint.xml" value="0.1305" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable/background_button.xml" value="0.1305" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable/background_gradient.xml" value="0.1305" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable/background_splash.xml" value="0.125" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable/gradient.xml" value="0.1305" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.15" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable/ic_baseline_assignment_ind_24.xml" value="0.15" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.15" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable/ic_baseline_how_to_reg_24.xml" value="0.15" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable/ic_baseline_navigate_next_24.xml" value="0.1305" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable/ic_see_pass.xml" value="0.1305" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/drawable/trending_background.xml" value="0.1305" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/layout/activity_main.xml" value="0.14175724637681159" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/layout/activity_splash_screen.xml" value="0.165" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/layout/fragment_forgot_password.xml" value="0.25" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/layout/fragment_introduce.xml" value="0.15217391304347827" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/layout/fragment_login.xml" value="0.165" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/layout/fragment_register.xml" value="0.165" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/layout/fragment_user_home.xml" value="0.14175724637681159" />
+        <entry key="..\:/Documents/Android/Fit_Dictionary-master/app/src/main/res/layout/fragment_verification_code.xml" value="0.14175724637681159" />
+        <entry key="..\:/Downloads/Fit_Dictionary-master/Fit_Dictionary-master/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Downloads/Fit_Dictionary-master/Fit_Dictionary-master/app/src/main/res/layout/fragment_forgot_password.xml" value="0.1" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable-v24/rounded_corner.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable/background_back_btn_login.xml" value="0.19583333333333333" />
@@ -40,7 +64,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
