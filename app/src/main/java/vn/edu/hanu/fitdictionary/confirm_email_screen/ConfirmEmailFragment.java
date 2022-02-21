@@ -81,7 +81,7 @@ public class ConfirmEmailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        resetPasswordConstraint.setEnabled(false);
+        resetPasswordConstraint.setEnabled(true);
         confirmEmailViewModel.isEmailValidate.observe(getViewLifecycleOwner(), data -> {
             if(!data){
                 alertTV.setText("Wrong Hanu email format");

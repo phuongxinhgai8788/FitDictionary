@@ -26,11 +26,13 @@ import android.widget.Toast;
 import vn.edu.hanu.fitdictionary.MainActivity;
 import vn.edu.hanu.fitdictionary.R;
 import vn.edu.hanu.fitdictionary.UserHomeFragment;
+import vn.edu.hanu.fitdictionary.confirm_email_screen.ConfirmEmailFragment;
 import vn.edu.hanu.fitdictionary.data.User;
 import vn.edu.hanu.fitdictionary.data.UserViewModel;
 import vn.edu.hanu.fitdictionary.helper.CountDownTimer;
 import vn.edu.hanu.fitdictionary.helper.JavaMailAPI;
 import vn.edu.hanu.fitdictionary.helper.RenderFragment;
+import vn.edu.hanu.fitdictionary.introduce_screen.IntroduceFragment;
 
 
 public class VerificationCodeFragment extends Fragment {
@@ -46,6 +48,7 @@ public class VerificationCodeFragment extends Fragment {
     private ImageView newPasswordIV, confirmPasswordIV;
     private CountDownTimer countDownTimer;
     private Context context;
+    private RenderFragment renderFragment;
     private VerificationCodeViewModel verificationCodeViewModel;
     private UserViewModel userViewModel;
 
@@ -59,6 +62,12 @@ public class VerificationCodeFragment extends Fragment {
         args.putSerializable(USER, user);
         args.putString(CODE, code);
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static VerificationCodeFragment newInstance() {
+        VerificationCodeFragment fragment = new VerificationCodeFragment();
+
         return fragment;
     }
 
@@ -77,6 +86,7 @@ public class VerificationCodeFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
+        this.renderFragment = (RenderFragment) context;
     }
 
     @Override
@@ -145,6 +155,7 @@ public class VerificationCodeFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 codeEntered = s.toString();
                 verificationCodeViewModel.onCodeChange(s,start, before, count);
+                getView().findViewById(R.id.constraint_reset_password).animate().alpha(1f);
             }
 
             @Override
@@ -226,7 +237,10 @@ public class VerificationCodeFragment extends Fragment {
                     RenderFragment mainActivity = (RenderFragment) context;
                     mainActivity.openFragment(userHomeFragment, true);
                 }
-
+        });
+        getView().findViewById(R.id.cancel_confirm_code).setOnClickListener(v -> {
+            ConfirmEmailFragment confirmEmailFragment = ConfirmEmailFragment.newInstance();
+            renderFragment.openFragment(confirmEmailFragment, true);
         });
     }
 

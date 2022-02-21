@@ -7,9 +7,9 @@
     <application
         android:name=".FitDictionaryApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_fit_symbol"
+        android:icon="@mipmap/ic_fit_dictionary"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_fit_symbol_round"
+        android:roundIcon="@mipmap/ic_fit_dictionary_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FitDictionary"
         android:usesCleartextTraffic="true">
