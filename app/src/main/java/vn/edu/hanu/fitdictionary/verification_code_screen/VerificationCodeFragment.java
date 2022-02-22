@@ -15,6 +15,7 @@ import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.text.method.TransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +89,7 @@ public class VerificationCodeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_verification_code, container, false);
-        okConstraint = view.findViewById(R.id.ok_bar_confirm_email);
+        okConstraint = view.findViewById(R.id.ok_bar_confirm_code);
         introTV = view.findViewById(R.id.verification_code_was_sent);
         codeET = view.findViewById(R.id.verification_code_et);
         newPasswordET = view.findViewById(R.id.new_password_et_confirm_code);
@@ -107,9 +108,6 @@ public class VerificationCodeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         okConstraint.setEnabled(false);
-        alertCodeTV.setVisibility(View.INVISIBLE);
-        alertNewPassTV.setVisibility(View.INVISIBLE);
-        alertConfirmPassTV.setVisibility(View.INVISIBLE);
 
         introTV.setText("Verification code was sent to "+user.getEmail()+".Resend request after " +
                 "60s if you have not received the code yet. Remember to check on Spam!");
@@ -124,7 +122,7 @@ public class VerificationCodeFragment extends Fragment {
         });
         verificationCodeViewModel.isNewPasswordValidate.observe(getViewLifecycleOwner(), data -> {
             if(!data){
-                alertNewPassTV.setVisibility(View.INVISIBLE);
+                alertNewPassTV.setVisibility(View.VISIBLE);
                 alertNewPassTV.setText("Password must have at least 6 characters");
             } else{
                 alertNewPassTV.setVisibility(View.INVISIBLE);
@@ -132,7 +130,7 @@ public class VerificationCodeFragment extends Fragment {
         });
         verificationCodeViewModel.isConfirmPasswordValidate.observe(getViewLifecycleOwner(), data -> {
             if(!data){
-                alertConfirmPassTV.setVisibility(View.INVISIBLE);
+                alertConfirmPassTV.setVisibility(View.VISIBLE);
                 alertNewPassTV.setText("Password must have at least 6 characters");
             }else{
                 alertConfirmPassTV.setVisibility(View.INVISIBLE);
@@ -141,6 +139,8 @@ public class VerificationCodeFragment extends Fragment {
         });
         verificationCodeViewModel.isBtnOkValidate.observe(getViewLifecycleOwner(), data -> {
             okConstraint.setEnabled(data);
+            Log.d("VerificationCode", okConstraint.isEnabled()+"");
+
         });
         countDownTimer = new CountDownTimer(60*1000, 1000);
         countDownTimer.setHostFragment(this);
@@ -229,11 +229,11 @@ public class VerificationCodeFragment extends Fragment {
 
         okConstraint.setOnClickListener(v -> {
             if(!codeEntered.equals(codeSent)){
+                alertCodeTV.setVisibility(View.VISIBLE);
                 alertCodeTV.setText("Code does not match");
-                alertCodeTV.setTextColor(Color.RED);
             } else if(!newPassEntered.equals(confirmPassEntered)) {
+                alertConfirmPassTV.setVisibility(View.VISIBLE);
                 alertConfirmPassTV.setText("Confirm password does not match");
-                alertConfirmPassTV.setTextColor(Color.RED);
             } else {
                 user.setPassword(newPassEntered);
                 userViewModel.updateUser(user.getId(),user).observe(getViewLifecycleOwner(), user -> {
@@ -242,16 +242,12 @@ public class VerificationCodeFragment extends Fragment {
                         userViewModel.fetchUsers().observe(getViewLifecycleOwner(), users -> {
                             if(users!=null){
                                 LoginFragment loginFragment = LoginFragment.newInstance(new Users(users));
-                                renderFragment.openFragment(loginFragment, true);
+                                renderFragment.openFragment(loginFragment, false);
 
                             }
                         });
                     }
                 });
-                renderFragment.updateUsers();
-                Users users = renderFragment.getUsers();
-                LoginFragment loginFragment = LoginFragment.newInstance(users);
-                renderFragment.openFragment(loginFragment, true);
                 }
 
         });

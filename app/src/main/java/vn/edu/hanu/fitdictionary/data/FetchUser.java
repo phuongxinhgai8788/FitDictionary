@@ -93,7 +93,7 @@ public class FetchUser {
         userRequest.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                Log.d(TAG, "User response received: "+response.body());
+                Log.d(TAG, "Register user response received: "+response.body());
                 User user = response.body();
                 responseLiveData.setValue(user);
             }
@@ -112,7 +112,7 @@ public class FetchUser {
         userRequest.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                Log.d(TAG, "User response received: "+response.body());
+                Log.d(TAG, "Update User response received: "+response.body());
                 User user = response.body();
                 responseLiveData.setValue(user);
             }

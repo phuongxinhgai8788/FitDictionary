@@ -30,37 +30,42 @@
         android:background="@drawable/background_gradient"
         app:layout_constraintTop_toBottomOf="@+id/confirm_code_tv"
         tools:layout_editor_absoluteX="70dp" />
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider2"
-        app:layout_constraintBottom_toBottomOf="parent">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/verification_code_was_sent"
         android:textColor="@color/black"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider2"
+        android:layout_marginTop="40dp"/>
 
-    <EditText
-        android:id="@+id/verification_code_et"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:inputType="number"
-        android:drawableStart="@drawable/ic_baseline_email_24"
-        android:drawablePadding="10dp"
-        android:layout_marginTop="30dp"
-        android:paddingLeft="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/verification_code_was_sent"
-        android:background="@drawable/background"
-        android:hint="@string/confirm_code"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/verification_code_was_sent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <EditText
+            android:id="@+id/verification_code_et"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/background"
+            android:drawableStart="@drawable/ic_baseline_email_24"
+            android:drawablePadding="10dp"
+            android:hint="@string/confirm_code"
+            android:inputType="number"
+            android:paddingLeft="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/verification_code_et"
         app:layout_constraintTop_toBottomOf="@id/verification_code_et"
         android:textColor="@color/red"
         android:layout_marginTop="10dp"
@@ -68,11 +73,11 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
+                android:paddingHorizontal="15dp"
                 android:id="@+id/count_constraint_confirm_code"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/verification_code_et"
-                android:layout_marginTop="40dp"
-                android:padding="15dp">
+                android:layout_marginTop="40dp">
 
                 <TextView
                     android:id="@+id/count_tv_confirm_code"
@@ -175,31 +180,33 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/confirm_password_space_confirm_code"
         app:layout_constraintTop_toBottomOf="@id/confirm_password_space_confirm_code"
+        app:layout_constraintEnd_toEndOf="@+id/confirm_password_space_confirm_code"
         android:layout_marginTop="10dp"
-        android:id="@+id/alert_confirm_password"/>
+        android:id="@+id/alert_confirm_password"
+        android:textColor="@color/red"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ok_bar_confirm_email"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/background_gradient"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alert_confirm_password">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ok"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:textSize="20sp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ok_bar_confirm_code"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/background_gradient"
+            android:layout_marginTop="50dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/alert_confirm_password">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ok"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
