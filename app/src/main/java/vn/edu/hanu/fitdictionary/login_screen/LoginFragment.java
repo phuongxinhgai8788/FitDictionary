@@ -93,7 +93,7 @@ public class LoginFragment extends Fragment {
         passwordET = view.findViewById(R.id.password_et_login);
         forgotPassTV = view.findViewById(R.id.forgot_pass_login);
         loginConstraint = view.findViewById(R.id.login_btn_login);
-        alertEmailTV = view.findViewById(R.id.alert_email_login);
+        alertEmailTV = view.findViewById(R.id.alert_login);
         passwordIV = view.findViewById(R.id.see_pass_login);
         signUpTV = view.findViewById(R.id.signup_switch);
         return view;
@@ -106,6 +106,7 @@ public class LoginFragment extends Fragment {
         loginConstraint.setEnabled(false);
         loginViewModel.isEmailValidate.observe(getViewLifecycleOwner(), data -> {
             if (!data) {
+                alertEmailTV.setVisibility(View.VISIBLE);
                 alertEmailTV.setText("Hanu email format @s.hanu.edu.vn is required");
             } else{
                 alertEmailTV.setVisibility(View.INVISIBLE);

@@ -93,7 +93,6 @@ public class ConfirmEmailFragment extends Fragment {
         });
         confirmEmailViewModel.isEmailValidate.observe(getViewLifecycleOwner(), data -> {
             sendConstraint.setEnabled(data);
-            Log.d("ConfirmEmailFragment", sendConstraint.isEnabled()+"");
         });
     }
 

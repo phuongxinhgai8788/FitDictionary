@@ -23,7 +23,7 @@ public interface FitApi {
     @POST("/users")
     public Call<User> register(@Body User user);
 
-    @PUT("update/{id}")
+    @PUT("/users/{id}")
     public Call<User> updateProfile(@Path("id") int id, @Body User user);
 
 }

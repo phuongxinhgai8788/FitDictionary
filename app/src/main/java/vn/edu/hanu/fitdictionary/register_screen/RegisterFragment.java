@@ -25,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import vn.edu.hanu.fitdictionary.MainActivity;
 import vn.edu.hanu.fitdictionary.R;
 import vn.edu.hanu.fitdictionary.data.User;
@@ -37,7 +39,7 @@ import vn.edu.hanu.fitdictionary.login_screen.LoginFragment;
 public class RegisterFragment extends Fragment {
     private ConstraintLayout signUpConstraint;
     private EditText emailET, passwordET, fullNameET;
-    private TextView alertEmailTV, alertPasswordTV;
+    private TextView alertEmailTV, alertPasswordTV, logInTV;
     private ImageView seePassIV;
     private String emailEntered, passwordEntered, fullNameEntered;
     private RegisterViewModel registerViewModel;
@@ -89,6 +91,7 @@ public class RegisterFragment extends Fragment {
         fullNameET = view.findViewById(R.id.full_name_et_signup);
         alertEmailTV = view.findViewById(R.id.alert_email_signup);
         alertPasswordTV = view.findViewById(R.id.alert_password_signup);
+        logInTV = view.findViewById(R.id.login_switch);
         return view;
     }
 
@@ -113,8 +116,7 @@ public class RegisterFragment extends Fragment {
         });
         registerViewModel.isBtnSignUpValidate.observe(getViewLifecycleOwner(), data -> {
             signUpConstraint.setEnabled(data);
-            Log.d("RegisterFragment", signUpConstraint.isEnabled()+"");
-            
+
         });
     }
 
@@ -192,6 +194,14 @@ public class RegisterFragment extends Fragment {
             confirmUser();
         });
 
+        logInTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Users users = renderFragment.getUsers();
+                LoginFragment loginFragment = LoginFragment.newInstance(users);
+                renderFragment.openFragment(loginFragment, false);
+            }
+        });
     }
 
     private void confirmUser() {
