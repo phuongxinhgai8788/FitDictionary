@@ -27,12 +27,16 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import vn.edu.hanu.fitdictionary.MainActivity;
 import vn.edu.hanu.fitdictionary.R;
 import vn.edu.hanu.fitdictionary.UserHomeFragment;
 import vn.edu.hanu.fitdictionary.confirm_email_screen.ConfirmEmailFragment;
 import vn.edu.hanu.fitdictionary.data.User;
 import vn.edu.hanu.fitdictionary.data.UserViewModel;
+import vn.edu.hanu.fitdictionary.data.Users;
 import vn.edu.hanu.fitdictionary.databinding.FragmentForgotPasswordBinding;
 import vn.edu.hanu.fitdictionary.helper.RenderFragment;
 import vn.edu.hanu.fitdictionary.register_screen.RegisterFragment;
@@ -41,23 +45,36 @@ import vn.edu.hanu.fitdictionary.register_screen.RegisterFragment;
 public class LoginFragment extends Fragment {
 
 
-    private ConstraintLayout backConstraint, loginConstraint;
+    private ConstraintLayout loginConstraint;
     private EditText emailET, passwordET;
-    private TextView forgotPassTV, alertEmailTV, alertPasswordTV;
+    private TextView forgotPassTV, alertEmailTV, alertPasswordTV, signUpTV;
     private ImageView passwordIV;
     private Context context;
     private RenderFragment renderFragment;
     private String emailEntered,  passwordEntered;
+    private Users users;
     private LoginViewModel loginViewModel;
-    private UserViewModel userViewModel;
+    private static final String USERS = "users";
 
     public LoginFragment() {
         // Required empty public constructor
     }
 
-    public static LoginFragment newInstance() {
+    public static LoginFragment newInstance(Users users) {
         LoginFragment fragment = new LoginFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(USERS, users);
+        fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            users = (Users)getArguments().getSerializable(USERS);
+        }
+        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
     }
 
     @Override
@@ -72,39 +89,35 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-//        backConstraint = view.findViewById(R.id.back_constraint_login);
         emailET = view.findViewById(R.id.email_address_et_login);
         passwordET = view.findViewById(R.id.password_et_login);
         forgotPassTV = view.findViewById(R.id.forgot_pass_login);
         loginConstraint = view.findViewById(R.id.login_btn_login);
         alertEmailTV = view.findViewById(R.id.alert_email_login);
-        alertPasswordTV = view.findViewById(R.id.alert_password_login);
         passwordIV = view.findViewById(R.id.see_pass_login);
+        signUpTV = view.findViewById(R.id.signup_switch);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
-        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
         loginConstraint.setEnabled(false);
         loginViewModel.isEmailValidate.observe(getViewLifecycleOwner(), data -> {
             if (!data) {
                 alertEmailTV.setText("Hanu email format @s.hanu.edu.vn is required");
-                alertEmailTV.setTextColor(Color.RED);
-            } else {
-                alertEmailTV.setText("Correct Hanu email format");
-                alertEmailTV.setTextColor(Color.BLACK);
+            } else{
+                alertEmailTV.setVisibility(View.INVISIBLE);
             }
         });
 
         loginViewModel.isPasswordValidate.observe(getViewLifecycleOwner(), data -> {
             if (!data) {
-                alertPasswordTV.setText("Password must have more than 5 characters");
-                alertPasswordTV.setTextColor(Color.RED);
+                alertEmailTV.setVisibility(View.VISIBLE);
+                alertEmailTV.setText("Password must have more than 5 characters");
             }else{
-                alertPasswordTV.setVisibility(View.INVISIBLE);
+                alertEmailTV.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -116,8 +129,6 @@ public class LoginFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        MainActivity mainActivity = (MainActivity) context;
 
         emailET.addTextChangedListener(new TextWatcher() {
 
@@ -176,31 +187,46 @@ public class LoginFragment extends Fragment {
 
         });
 
-//        backConstraint.setOnClickListener(v -> {
-//            mainActivity.onBackPressed();
-//        });
-
         //sign up
-        getView().findViewById(R.id.signup_switch).setOnClickListener(v -> {
-            RegisterFragment registerFragment = RegisterFragment.newInstance();
+        signUpTV.setOnClickListener(v -> {
+            RegisterFragment registerFragment = RegisterFragment.newInstance(users);
             renderFragment.openFragment(registerFragment, true);
         });
     }
 
     private void confirmUser() {
 
-        userViewModel.fetchUserByEmail(emailEntered).observe(getViewLifecycleOwner(), user -> {
-            if(user==null){
-                Toast.makeText(context,"User does not exist", Toast.LENGTH_SHORT).show();
-            }else{
-                String password = user.getPassword();
-                if(!password.equals(passwordEntered)){
-                    Toast.makeText(context,"Password does not match", Toast.LENGTH_SHORT).show();
-                }else{
-                    UserHomeFragment userHomeFragment = UserHomeFragment.newInstance(user);
-                    renderFragment.openFragment(userHomeFragment, true);
-                }
+//        userViewModel.fetchUserByEmail(emailEntered).observe(getViewLifecycleOwner(), user -> {
+//            if(user==null){
+//                Toast.makeText(context,"User does not exist", Toast.LENGTH_SHORT).show();
+//            }else{
+//                String password = user.getPassword();
+//                if(!password.equals(passwordEntered)){
+//                    Toast.makeText(context,"Password does not match", Toast.LENGTH_SHORT).show();
+//                }else{
+//                    UserHomeFragment userHomeFragment = UserHomeFragment.newInstance(user);
+//                    renderFragment.openFragment(userHomeFragment, true);
+//                }
+//                Log.d("LoginFragment",user.toString()+"");
+//            }
+//        });
+        boolean hasUser = false;
+        User user = new User();
+        for(User user1:users.getUsers()){
+            if(user1.getEmail().equals(emailEntered)){
+                user = user1;
+                hasUser = true;
             }
-        });
+        }
+        if(hasUser){
+            if(!passwordEntered.equals(user.getPassword())){
+                Toast.makeText(context, user.getFullName()+" : Wrong password", Toast.LENGTH_SHORT).show();
+            }else {
+                UserHomeFragment userHomeFragment = UserHomeFragment.newInstance(user);
+                renderFragment.openFragment(userHomeFragment, true);
+            }
+        }else{
+            Toast.makeText(context, "User does not exist",Toast.LENGTH_SHORT).show();
+        }
     }
 }

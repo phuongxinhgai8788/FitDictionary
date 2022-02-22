@@ -2,30 +2,39 @@ package vn.edu.hanu.fitdictionary;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
+import android.util.Log;
+
+import java.util.List;
 
 import vn.edu.hanu.fitdictionary.data.User;
-import vn.edu.hanu.fitdictionary.confirm_email_screen.ConfirmEmailFragment;
+import vn.edu.hanu.fitdictionary.data.UserViewModel;
+import vn.edu.hanu.fitdictionary.data.Users;
 import vn.edu.hanu.fitdictionary.helper.RenderFragment;
-import vn.edu.hanu.fitdictionary.verification_code_screen.VerificationCodeFragment;
-import vn.edu.hanu.fitdictionary.introduce_screen.IntroduceFragment;
 import vn.edu.hanu.fitdictionary.login_screen.LoginFragment;
-import vn.edu.hanu.fitdictionary.register_screen.RegisterFragment;
 
 public class MainActivity extends AppCompatActivity implements RenderFragment {
 
     private User user;
+    private Users users;
+    private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LoginFragment introduceFragment = LoginFragment.newInstance();
-        openFragment(introduceFragment, false);
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        userViewModel.fetchUsers().observe(this, users -> {
+            if(users!=null){
+                this.users = new Users(users);
+                LoginFragment loginFragment = LoginFragment.newInstance(this.users);
+                openFragment(loginFragment, false);
+            }
+        });
 
     }
 
@@ -55,60 +64,22 @@ public class MainActivity extends AppCompatActivity implements RenderFragment {
         }
     }
 
-//    public void setUser(User user){
-//        this.user = user;
-//    }
-//
-//    public void renderIntroduceFragment(){
-//        Fragment fragment = IntroduceFragment.newInstance();
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_container);
-//        if (currentFragment == null) {
-//            fragmentTransaction.add(R.id.fragment_container, fragment)
-//                    .commit();
-//        }
-//    }
-//
-//    public void renderLoginFragment(){
-//        Fragment fragment = LoginFragment.newInstance();
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.addToBackStack(null)
-//                .replace(R.id.fragment_container, fragment)
-//                .commit();
-//    }
-//
-//    public void renderSignUpFragment() {
-//        Fragment fragment = RegisterFragment.newInstance();
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.addToBackStack(null)
-//                .replace(R.id.fragment_container, fragment)
-//                .commit();
-//    }
-//
-//    public void renderForgotPasswordFragment() {
-//        Fragment fragment = ConfirmEmailFragment.newInstance();
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.addToBackStack(null)
-//                .replace(R.id.fragment_container, fragment)
-//                .commit();
-//    }
-//
-//    public void renderVerificationCodeFragment(String code){
-//        Fragment fragment = VerificationCodeFragment.newInstance(user,code);
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.addToBackStack(null)
-//                .replace(R.id.fragment_container, fragment)
-//                .commit();
-//
-//    }
-//
-//    public void renderUserHomeFragment() {
-//    }
+    @Override
+    public void updateUsers() {
+        userViewModel.fetchUsers().observe(this, users -> {
+            this.users = new Users(users);
+        });
+    }
+
+    @Override
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public Users getUsers() {
+        return this.users;
+    }
 
 }
 

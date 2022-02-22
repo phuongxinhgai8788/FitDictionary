@@ -3,18 +3,26 @@ package vn.edu.hanu.fitdictionary.data;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 public class User implements Serializable {
+
+    @SerializedName("id")
     private int id;
 
+    @SerializedName("email")
     private String email;
 
+    @SerializedName("full_name")
     private String fullName;
 
+    @SerializedName("password")
     private String password;
 
+    @SerializedName("role")
     private String role;
 
     public User(){

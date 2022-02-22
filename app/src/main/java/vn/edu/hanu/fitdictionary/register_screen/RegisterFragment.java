@@ -15,6 +15,7 @@ import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.text.method.TransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,31 +29,45 @@ import vn.edu.hanu.fitdictionary.MainActivity;
 import vn.edu.hanu.fitdictionary.R;
 import vn.edu.hanu.fitdictionary.data.User;
 import vn.edu.hanu.fitdictionary.data.UserViewModel;
+import vn.edu.hanu.fitdictionary.data.Users;
 import vn.edu.hanu.fitdictionary.helper.RenderFragment;
 import vn.edu.hanu.fitdictionary.login_screen.LoginFragment;
 
 
 public class RegisterFragment extends Fragment {
-    private ConstraintLayout backConstraint, signUpConstraint;
+    private ConstraintLayout signUpConstraint;
     private EditText emailET, passwordET, fullNameET;
     private TextView alertEmailTV, alertPasswordTV;
-    private CheckBox checkBoxEmail, checkBoxTerms;
     private ImageView seePassIV;
     private String emailEntered, passwordEntered, fullNameEntered;
     private RegisterViewModel registerViewModel;
     private UserViewModel userViewModel;
     private Context context;
     private RenderFragment renderFragment;
+    private static final String USERS = "users";
+    private Users users;
 
     public RegisterFragment() {
         // Required empty public constructor
     }
 
 
-    public static RegisterFragment newInstance() {
+    public static RegisterFragment newInstance(Users users) {
         RegisterFragment fragment = new RegisterFragment();
-
+        Bundle args = new Bundle();
+        args.putSerializable(USERS, users);
+        fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments()!=null){
+            users = (Users)getArguments().getSerializable(USERS);
+        }
+        registerViewModel = ViewModelProviders.of(this).get(RegisterViewModel.class);
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
     }
 
     @Override
@@ -67,7 +82,6 @@ public class RegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register, container, false);
-//        backConstraint = view.findViewById(R.id.back_constraint_sign_up);
         seePassIV = view.findViewById(R.id.see_pass_login);
         signUpConstraint = view.findViewById(R.id.signup_btn);
         emailET = view.findViewById(R.id.email_address_et_signup);
@@ -75,36 +89,31 @@ public class RegisterFragment extends Fragment {
         fullNameET = view.findViewById(R.id.full_name_et_signup);
         alertEmailTV = view.findViewById(R.id.alert_email_signup);
         alertPasswordTV = view.findViewById(R.id.alert_password_signup);
-        checkBoxEmail = view.findViewById(R.id.checkbox_email_updates_sign_up);
-        checkBoxTerms = view.findViewById(R.id.checkbox_agreement_sign_up);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        registerViewModel = ViewModelProviders.of(this).get(RegisterViewModel.class);
-        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
         signUpConstraint.setEnabled(false);
         registerViewModel.isEmailValidate.observe(getViewLifecycleOwner(), data -> {
             if(!data){
                 alertEmailTV.setText("Hanu email format @s.hanu.edu.vn is required");
-                alertEmailTV.setTextColor(Color.RED);
             }else{
-                alertEmailTV.setText("Correct Hanu email format");
-                alertEmailTV.setTextColor(Color.BLACK);
+                alertEmailTV.setVisibility(View.INVISIBLE);
             }
         });
         registerViewModel.isPasswordValidate.observe(getViewLifecycleOwner(), data -> {
             if(!data){
                 alertPasswordTV.setText("Password must have more than 5 characters");
-                alertPasswordTV.setTextColor(Color.RED);
             }else {
                 alertPasswordTV.setVisibility(View.INVISIBLE);
             }
         });
         registerViewModel.isBtnSignUpValidate.observe(getViewLifecycleOwner(), data -> {
             signUpConstraint.setEnabled(data);
+            Log.d("RegisterFragment", signUpConstraint.isEnabled()+"");
             
         });
     }
@@ -182,33 +191,37 @@ public class RegisterFragment extends Fragment {
         signUpConstraint.setOnClickListener(v -> {
             confirmUser();
         });
-        
-//        backConstraint.setOnClickListener(v -> {
-//            getActivity().onBackPressed();
-//        });
-        getView().findViewById(R.id.login_switch).setOnClickListener(v -> {
-            LoginFragment loginFragment = LoginFragment.newInstance();
-            renderFragment.openFragment(loginFragment, true);
-        });
+
     }
 
     private void confirmUser() {
 
-        userViewModel.fetchUserByEmail(emailEntered).observe(getViewLifecycleOwner(), user -> {
-            if(user.equals("User not found")){
-                User savedUser = new User();
-                savedUser.setId(0);
-                savedUser.setEmail(emailEntered);
-                savedUser.setFullName(fullNameEntered);
-                savedUser.setRole("STUDENT");
-                savedUser.setPassword(passwordEntered);
-                userViewModel.saveUser(savedUser);
-                RenderFragment renderFragment = (RenderFragment) context;
-                LoginFragment loginFragment = LoginFragment.newInstance();
-                renderFragment.openFragment(loginFragment, true);
-            }else{
-                Toast.makeText(context, "User already exists", Toast.LENGTH_SHORT).show();
+        boolean isUserExist = false;
+        for(User user:users.getUsers()){
+            if(emailEntered.equals(user.getEmail())){
+                isUserExist = true;
             }
-        });
+        }
+        if(isUserExist){
+            Toast.makeText(context, "User exists. Login or reset password", Toast.LENGTH_SHORT).show();
+
+        }else{
+            User user = new User();
+            user.setEmail(emailEntered);
+            user.setFullName(fullNameEntered);
+            user.setPassword(passwordEntered);
+            userViewModel.saveUser(user).observe(getViewLifecycleOwner(), savedUser -> {
+                if(savedUser!=null){
+                    RenderFragment renderFragment = (RenderFragment) context;
+                    renderFragment.updateUsers();
+                    userViewModel.fetchUsers().observe(getViewLifecycleOwner(),fetchedUsers -> {
+                        if(fetchedUsers!=null){
+                            LoginFragment loginFragment = LoginFragment.newInstance(new Users(fetchedUsers));
+                            renderFragment.openFragment(loginFragment, true);
+                        }
+                    });
+                }
+            });
+        }
     }
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.Collection;
 import java.util.List;
 
 import retrofit2.Call;
@@ -21,7 +22,7 @@ public class FetchUser {
 
     private FetchUser(){
 
-        retrofit = new Retrofit.Builder().baseUrl("http://192.168.2.100:8080")
+        retrofit = new Retrofit.Builder().baseUrl("https://fit-dic-api-5th.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         fitApi = retrofit.create(FitApi.class);
@@ -29,20 +30,39 @@ public class FetchUser {
 
     public LiveData<List<User>> fetchUsers(){
         MutableLiveData<List<User>> responseLiveData = new MutableLiveData<>();
-        Call<UsersResponse> userRequest = fitApi.fetchUsers();
-        userRequest.enqueue(new Callback<UsersResponse>() {
+        Call<List<User>> userRequest = fitApi.fetchUsers();
+        userRequest.enqueue(new Callback<List<User>>() {
             @Override
-            public void onResponse(Call<UsersResponse> call, Response<UsersResponse> response) {
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 Log.d(TAG, "Users response received");
-                UsersResponse usersResponse = response.body();
-                List<User> users = usersResponse.users;
+                List<User> users = response.body();
                 responseLiveData.setValue(users);
             }
 
             @Override
-            public void onFailure(Call<UsersResponse> call, Throwable t) {
+            public void onFailure(Call<List<User>> call, Throwable t) {
 
                 Log.d(TAG, "Failed to fetch users", t);
+            }
+        });
+        return responseLiveData;
+    }
+
+    public LiveData<User> fetchUserByID(int id){
+        MutableLiveData<User> responseLiveData = new MutableLiveData<>();
+        Call<User> userRequest = fitApi.fetchUserById(id);
+        userRequest.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                Log.d(TAG, "User response received: "+response.body());
+                User user = response.body();
+                responseLiveData.setValue(user);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+                Log.d(TAG, "Failed to fetch user", t);
             }
         });
         return responseLiveData;
@@ -63,6 +83,44 @@ public class FetchUser {
             public void onFailure(Call<User> call, Throwable t) {
 
                 Log.d(TAG, "Failed to fetch user", t);
+            }
+        });
+        return responseLiveData;
+    }
+    public LiveData<User> register (User user){
+        MutableLiveData<User> responseLiveData = new MutableLiveData<>();
+        Call<User> userRequest = fitApi.register(user);
+        userRequest.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                Log.d(TAG, "User response received: "+response.body());
+                User user = response.body();
+                responseLiveData.setValue(user);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+                Log.d(TAG, "Failed to register user", t);
+            }
+        });
+        return responseLiveData;
+    }
+    public LiveData<User> updateProfile (int id, User user){
+        MutableLiveData<User> responseLiveData = new MutableLiveData<>();
+        Call<User> userRequest = fitApi.updateProfile(id, user);
+        userRequest.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                Log.d(TAG, "User response received: "+response.body());
+                User user = response.body();
+                responseLiveData.setValue(user);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+                Log.d(TAG, "Failed to update user", t);
             }
         });
         return responseLiveData;

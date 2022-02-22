@@ -24,4 +24,6 @@
     <string name="confirm_new_password">Confirm new password</string>
     <string name="back_fake"><![CDATA[<]]></string>
     <string name="full_name">Full Name</string>
+    <string name="cancel">Cancel</string>
+    <string name="already_have_an_account">Already have an account?</string>
 </resources>

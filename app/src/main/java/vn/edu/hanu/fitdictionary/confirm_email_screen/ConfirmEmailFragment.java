@@ -20,10 +20,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import vn.edu.hanu.fitdictionary.MainActivity;
+import java.util.List;
+
 import vn.edu.hanu.fitdictionary.R;
 import vn.edu.hanu.fitdictionary.data.User;
-import vn.edu.hanu.fitdictionary.data.UserViewModel;
 import vn.edu.hanu.fitdictionary.helper.JavaMailAPI;
 import vn.edu.hanu.fitdictionary.helper.RenderFragment;
 import vn.edu.hanu.fitdictionary.verification_code_screen.VerificationCodeFragment;
@@ -32,13 +32,13 @@ import vn.edu.hanu.fitdictionary.verification_code_screen.VerificationCodeFragme
 public class ConfirmEmailFragment extends Fragment {
 
     private EditText emailET;
-    private TextView alertTV;
-    private ConstraintLayout resetPasswordConstraint, backConstraint;
+    private TextView alertTV, cancelTV;
+    private ConstraintLayout sendConstraint;
     private String emailEntered, code;
     private Context context;
     private ConfirmEmailViewModel confirmEmailViewModel;
-    private UserViewModel userViewModel;
-    private MainActivity mainActivity;
+    private RenderFragment renderFragment;
+    private List<User> users;
     private User user;
 
     public ConfirmEmailFragment() {
@@ -55,14 +55,14 @@ public class ConfirmEmailFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
-        mainActivity = (MainActivity) context;
+        renderFragment = (RenderFragment) context;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         confirmEmailViewModel = ViewModelProviders.of(this).get(ConfirmEmailViewModel.class);
-        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        users = renderFragment.getUsers().getUsers();
     }
 
     @Override
@@ -71,9 +71,9 @@ public class ConfirmEmailFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_forgot_password, container, false);
         emailET = view.findViewById(R.id.email_address_et_forgot_pass);
-        resetPasswordConstraint = view.findViewById(R.id.reset_pass_bar);
+        sendConstraint = view.findViewById(R.id.reset_pass_bar);
         alertTV = view.findViewById(R.id.alert_forgot_pass);
-        backConstraint = view.findViewById(R.id.back_constraint_forgot_pass);
+        cancelTV = view.findViewById(R.id.cancel_reset_password);
         return view;
     }
 
@@ -81,19 +81,19 @@ public class ConfirmEmailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        resetPasswordConstraint.setEnabled(false);
+        sendConstraint.setEnabled(false);
         confirmEmailViewModel.isEmailValidate.observe(getViewLifecycleOwner(), data -> {
             if(!data){
-                alertTV.setText("Wrong Hanu email format");
+                alertTV.setVisibility(View.VISIBLE);
+                alertTV.setText("Hanu email format @s.hanu.edu.vn is required");
                 alertTV.setTextColor(Color.RED);
             }else{
-                alertTV.setText("Correct Hanu email format");
-                alertTV.setTextColor(Color.BLACK);
+                alertTV.setVisibility(View.INVISIBLE);
             }
         });
-        confirmEmailViewModel.isBtnResetPasswordValidate.observe(getViewLifecycleOwner(), data -> {
-            resetPasswordConstraint.setEnabled(data);
-            Log.d("ConfirmEmailFragment", resetPasswordConstraint.isEnabled()+"");
+        confirmEmailViewModel.isEmailValidate.observe(getViewLifecycleOwner(), data -> {
+            sendConstraint.setEnabled(data);
+            Log.d("ConfirmEmailFragment", sendConstraint.isEnabled()+"");
         });
     }
 
@@ -101,8 +101,8 @@ public class ConfirmEmailFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        getView().findViewById(R.id.cancel_reset_password).setOnClickListener(v -> {
-            mainActivity.onBackPressed();
+        cancelTV.setOnClickListener(v -> {
+            getActivity().onBackPressed();
         });
         emailET.addTextChangedListener( new TextWatcher(){
 
@@ -122,7 +122,7 @@ public class ConfirmEmailFragment extends Fragment {
 
             }
         });
-        resetPasswordConstraint.setOnClickListener(v -> {
+        sendConstraint.setOnClickListener(v -> {
 
                 confirmUser();
 
@@ -130,19 +130,34 @@ public class ConfirmEmailFragment extends Fragment {
     }
 
     private void confirmUser() {
-        userViewModel.fetchUserByEmail(emailEntered).observe(getViewLifecycleOwner(), user -> {
-
-            if (user == null) {
-
-                Toast.makeText(context, "Account does not exist", Toast.LENGTH_SHORT).show();
-            } else {
-                this.user = user;
-                sendEmail();
-                VerificationCodeFragment verificationCodeFragment = VerificationCodeFragment.newInstance(user, code);
-                RenderFragment renderFragment = (RenderFragment) context;
-                renderFragment.openFragment(verificationCodeFragment, true);
+//        userViewModel.fetchUserByEmail(emailEntered).observe(getViewLifecycleOwner(), user -> {
+//
+//            if (user == null) {
+//
+//                Toast.makeText(context, "Account does not exist", Toast.LENGTH_SHORT).show();
+//            } else {
+//                this.user = user;
+//                sendEmail();
+//                VerificationCodeFragment verificationCodeFragment = VerificationCodeFragment.newInstance(user, code);
+//                RenderFragment renderFragment = (RenderFragment) context;
+//                renderFragment.openFragment(verificationCodeFragment, true);
+//            }
+//        });
+        boolean isEmailExist = false;
+        for(User user1:users){
+            if(emailEntered.equals(user1.getEmail())){
+                isEmailExist = true;
+                this.user = user1;
             }
-        });
+        }
+        if(!isEmailExist){
+            Toast.makeText(context, "Email does not exist", Toast.LENGTH_SHORT).show();
+        }else{
+            sendEmail();
+            VerificationCodeFragment verificationCodeFragment = VerificationCodeFragment.newInstance(user, code);
+            renderFragment.openFragment(verificationCodeFragment, true);
+
+        }
     }
 
     private void sendEmail() {

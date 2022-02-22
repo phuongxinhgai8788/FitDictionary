@@ -28,9 +28,11 @@ import vn.edu.hanu.fitdictionary.R;
 import vn.edu.hanu.fitdictionary.UserHomeFragment;
 import vn.edu.hanu.fitdictionary.data.User;
 import vn.edu.hanu.fitdictionary.data.UserViewModel;
+import vn.edu.hanu.fitdictionary.data.Users;
 import vn.edu.hanu.fitdictionary.helper.CountDownTimer;
 import vn.edu.hanu.fitdictionary.helper.JavaMailAPI;
 import vn.edu.hanu.fitdictionary.helper.RenderFragment;
+import vn.edu.hanu.fitdictionary.login_screen.LoginFragment;
 
 
 public class VerificationCodeFragment extends Fragment {
@@ -39,13 +41,14 @@ public class VerificationCodeFragment extends Fragment {
     private static final String CODE = "code";
 
     private User user;
-    private ConstraintLayout backConstraint, okConstraint, countConstraint;
+    private ConstraintLayout okConstraint, countConstraint;
     private TextView introTV, alertCodeTV, countTV, alertNewPassTV, alertConfirmPassTV;
     private String codeSent, codeEntered, newPassEntered, confirmPassEntered;
     private EditText codeET, newPasswordET, confirmPasswordET;
     private ImageView newPasswordIV, confirmPasswordIV;
     private CountDownTimer countDownTimer;
     private Context context;
+    private RenderFragment renderFragment;
     private VerificationCodeViewModel verificationCodeViewModel;
     private UserViewModel userViewModel;
 
@@ -77,6 +80,7 @@ public class VerificationCodeFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
+        renderFragment = (RenderFragment) context;
     }
 
     @Override
@@ -84,14 +88,13 @@ public class VerificationCodeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_verification_code, container, false);
-        backConstraint = view.findViewById(R.id.back_constraint_confirm_pass);
         okConstraint = view.findViewById(R.id.ok_bar_confirm_email);
         introTV = view.findViewById(R.id.verification_code_was_sent);
-        codeET = view.findViewById(R.id.confirm_code_enter);
-        newPasswordET = view.findViewById(R.id.new_password_et);
-        confirmPasswordET = view.findViewById(R.id.confirm_password_et);
-        newPasswordIV = view.findViewById(R.id.see_new_password);
-        confirmPasswordIV = view.findViewById(R.id.see_confirm_new_pass);
+        codeET = view.findViewById(R.id.verification_code_et);
+        newPasswordET = view.findViewById(R.id.new_password_et_confirm_code);
+        confirmPasswordET = view.findViewById(R.id.confirm_password_et_confirm_code);
+        newPasswordIV = view.findViewById(R.id.see_new_pass_confirm_code);
+        confirmPasswordIV = view.findViewById(R.id.see_confirm_pass_confirm_code);
         alertCodeTV = view.findViewById(R.id.alert_confirm_code);
         alertNewPassTV = view.findViewById(R.id.alert_new_password);
         alertConfirmPassTV = view.findViewById(R.id.alert_confirm_password);
@@ -104,24 +107,36 @@ public class VerificationCodeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         okConstraint.setEnabled(false);
+        alertCodeTV.setVisibility(View.INVISIBLE);
+        alertNewPassTV.setVisibility(View.INVISIBLE);
+        alertConfirmPassTV.setVisibility(View.INVISIBLE);
+
         introTV.setText("Verification code was sent to "+user.getEmail()+".Resend request after " +
                 "60s if you have not received the code yet. Remember to check on Spam!");
         verificationCodeViewModel.isCodeValidate.observe(getViewLifecycleOwner(), data -> {
             if(!data){
+                alertCodeTV.setVisibility(View.VISIBLE);
                 alertCodeTV.setText("Code must have 6 digits");
-                alertCodeTV.setTextColor(Color.RED);
+            }
+            else{
+                alertCodeTV.setVisibility(View.INVISIBLE);
             }
         });
         verificationCodeViewModel.isNewPasswordValidate.observe(getViewLifecycleOwner(), data -> {
             if(!data){
+                alertNewPassTV.setVisibility(View.INVISIBLE);
                 alertNewPassTV.setText("Password must have at least 6 characters");
-                alertNewPassTV.setTextColor(Color.RED);
+            } else{
+                alertNewPassTV.setVisibility(View.INVISIBLE);
             }
         });
         verificationCodeViewModel.isConfirmPasswordValidate.observe(getViewLifecycleOwner(), data -> {
             if(!data){
+                alertConfirmPassTV.setVisibility(View.INVISIBLE);
                 alertNewPassTV.setText("Password must have at least 6 characters");
-                alertNewPassTV.setTextColor(Color.RED);
+            }else{
+                alertConfirmPassTV.setVisibility(View.INVISIBLE);
+
             }
         });
         verificationCodeViewModel.isBtnOkValidate.observe(getViewLifecycleOwner(), data -> {
@@ -221,10 +236,22 @@ public class VerificationCodeFragment extends Fragment {
                 alertConfirmPassTV.setTextColor(Color.RED);
             } else {
                 user.setPassword(newPassEntered);
-                userViewModel.updateUser(user);
-                UserHomeFragment userHomeFragment = UserHomeFragment.newInstance(user);
-                    RenderFragment mainActivity = (RenderFragment) context;
-                    mainActivity.openFragment(userHomeFragment, true);
+                userViewModel.updateUser(user.getId(),user).observe(getViewLifecycleOwner(), user -> {
+                    if(user!=null){
+                        renderFragment.updateUsers();
+                        userViewModel.fetchUsers().observe(getViewLifecycleOwner(), users -> {
+                            if(users!=null){
+                                LoginFragment loginFragment = LoginFragment.newInstance(new Users(users));
+                                renderFragment.openFragment(loginFragment, true);
+
+                            }
+                        });
+                    }
+                });
+                renderFragment.updateUsers();
+                Users users = renderFragment.getUsers();
+                LoginFragment loginFragment = LoginFragment.newInstance(users);
+                renderFragment.openFragment(loginFragment, true);
                 }
 
         });
@@ -234,14 +261,13 @@ public class VerificationCodeFragment extends Fragment {
         long leftSeconds = millisUntilFinished / 1000;
         String countBtnText = "Resend after "+leftSeconds+" s";
         countTV.setText(countBtnText);
-        countTV.setBackground(this.getResources().getDrawable(R.drawable.rounded_corner));
-        countTV.setEnabled(false);
+        countTV.setTextColor(Color.BLACK);
     }
 
     public void onCountDownTimerFinishEvent() {
         countTV.setEnabled(true);
         countTV.setText("Resend");
-        countTV.setBackground(this.getResources().getDrawable(R.drawable.background_timer));
+        countConstraint.setBackground(this.getResources().getDrawable(R.drawable.background_gradient));
         this.countTV.setOnClickListener(v -> {
             codeSent = "";
             for(int i=0; i<6;i++){

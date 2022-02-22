@@ -3,6 +3,7 @@ package vn.edu.hanu.fitdictionary.data;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.Collection;
 import java.util.List;
 
 public class UserViewModel extends ViewModel {
@@ -10,6 +11,10 @@ public class UserViewModel extends ViewModel {
     private FetchUser fetchUser = FetchUser.get();
 
     public UserViewModel(){
+    }
+
+    public LiveData<User> fetchUserByID(int id){
+        return fetchUser.fetchUserByID(id);
     }
 
     public LiveData<User> fetchUserByEmail(String email){
@@ -20,7 +25,8 @@ public class UserViewModel extends ViewModel {
         return fetchUser.fetchUsers();
     }
 
-    public void updateUser(User user) {
+    public LiveData<User> updateUser(int id, User user) {
+        return fetchUser.updateProfile(id, user);
     }
 
     @Override
@@ -28,6 +34,8 @@ public class UserViewModel extends ViewModel {
         super.onCleared();
     }
 
-    public void saveUser(User savedUser) {
+    public LiveData<User> saveUser(User savedUser) {
+        return fetchUser.register(savedUser);
     }
+
 }
