@@ -16,18 +16,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_baseline_how_to_reg_24" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scroll_view_register"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_signup"
+        app:layout_constraintBottom_toBottomOf="parent">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_signup"
+        app:layout_constraintTop_toTopOf="@+id/image_signup"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <EditText
             android:id="@+id/email_address_et_signup"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_width="365dp"
+            android:layout_height="46dp"
             android:background="@drawable/background"
             android:drawableStart="@drawable/ic_baseline_email_24"
             android:drawablePadding="10dp"
@@ -192,4 +200,5 @@
             app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

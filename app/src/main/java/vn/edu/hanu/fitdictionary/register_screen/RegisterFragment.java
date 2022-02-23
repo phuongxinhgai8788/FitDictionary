@@ -1,7 +1,6 @@
 package vn.edu.hanu.fitdictionary.register_screen;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,21 +18,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
-
-import vn.edu.hanu.fitdictionary.MainActivity;
 import vn.edu.hanu.fitdictionary.R;
 import vn.edu.hanu.fitdictionary.data.User;
 import vn.edu.hanu.fitdictionary.data.UserViewModel;
-import vn.edu.hanu.fitdictionary.data.Users;
 import vn.edu.hanu.fitdictionary.helper.RenderFragment;
-import vn.edu.hanu.fitdictionary.login_screen.LoginFragment;
 
 
 public class RegisterFragment extends Fragment {
@@ -41,13 +36,12 @@ public class RegisterFragment extends Fragment {
     private EditText emailET, passwordET, fullNameET;
     private TextView alertEmailTV, alertPasswordTV, logInTV;
     private ImageView seePassIV;
+    private ScrollView scrollView;
     private String emailEntered, passwordEntered, fullNameEntered;
     private RegisterViewModel registerViewModel;
     private UserViewModel userViewModel;
     private Context context;
     private RenderFragment renderFragment;
-    private static final String USERS = "users";
-    private Users users;
     private int maxID;
 
     public RegisterFragment() {
@@ -55,20 +49,14 @@ public class RegisterFragment extends Fragment {
     }
 
 
-    public static RegisterFragment newInstance(Users users) {
+    public static RegisterFragment newInstance() {
         RegisterFragment fragment = new RegisterFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(USERS, users);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments()!=null){
-            users = (Users)getArguments().getSerializable(USERS);
-        }
         registerViewModel = ViewModelProviders.of(this).get(RegisterViewModel.class);
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
     }
@@ -196,50 +184,37 @@ public class RegisterFragment extends Fragment {
             confirmUser();
         });
 
-        logInTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Users users = renderFragment.getUsers();
-                LoginFragment loginFragment = LoginFragment.newInstance(users);
-                renderFragment.openFragment(loginFragment, false);
-            }
+        logInTV.setOnClickListener(v -> {
+           getActivity().onBackPressed();
         });
     }
 
     private void confirmUser() {
 
-        boolean isUserExist = false;
-        for(User user:users.getUsers()){
-            if(emailEntered.equals(user.getEmail())){
-                isUserExist = true;
-            }
-        }
-        if(isUserExist){
+
+        userViewModel.getUserByEmail(emailEntered).observe(getViewLifecycleOwner(), user -> {
+            if(user!=null && user.size()>0){
             Toast.makeText(context, "User exists. Login or reset password", Toast.LENGTH_SHORT).show();
 
-        }else{
-            User user = new User();
-            user.setEmail(emailEntered);
-            user.setFullName(fullNameEntered);
-            user.setPassword(passwordEntered);
-            userViewModel.fetchMaxId().observe(getViewLifecycleOwner(), max -> {
-                if(max!=null){
-                    maxID = max.getMax();
-                    user.setId(maxID+1);
-                    userViewModel.saveUser(user).observe(getViewLifecycleOwner(), savedUser -> {
-                        if(savedUser!=null){
-                            RenderFragment renderFragment = (RenderFragment) context;
-                            renderFragment.updateUsers();
-                            userViewModel.fetchUsers().observe(getViewLifecycleOwner(),fetchedUsers -> {
-                                if(fetchedUsers!=null){
-                                    LoginFragment loginFragment = LoginFragment.newInstance(new Users(fetchedUsers));
-                                    renderFragment.openFragment(loginFragment, true);
-                                }
-                            });
-                        }
-                    });
-                }
-            });
+            }else{
+            User newUser = new User();
+                newUser.setEmail(emailEntered);
+                newUser.setFullName(fullNameEntered);
+                newUser.setPassword(passwordEntered);
+                userViewModel.getLastId().observe(getViewLifecycleOwner(), max -> {
+                    if (max != null) {
+                        maxID = max.getMax();
+                        newUser.setId(maxID + 1);
+                        userViewModel.saveUser(newUser).observe(getViewLifecycleOwner(), savedUser -> {
+                            if (savedUser != null) {
+                                getActivity().onBackPressed();
+                            }
+                        });
+                    }
+
+                });
         }
+        });
     }
 }
+

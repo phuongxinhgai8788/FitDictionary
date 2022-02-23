@@ -13,32 +13,33 @@ public class UserViewModel extends ViewModel {
     public UserViewModel(){
     }
 
-    public LiveData<User> fetchUserByID(int id){
-        return fetchUser.fetchUserByID(id);
-    }
+//    public LiveData<User> fetchUserByID(int id){
+//        return fetchUser.fetchUserByID(id);
+//    }
 
-    public LiveData<User> fetchUserByEmail(String email){
-        return fetchUser.fetchUserByEmail(email);
-    }
-
-    public LiveData<List<User>> fetchUsers(){
-        return fetchUser.fetchUsers();
-    }
+//    public LiveData<List<User>> fetchUsers(){
+//        return fetchUser.fetchUsers();
+//    }
 
     public LiveData<User> updateUser(int id, User user) {
         return fetchUser.updateProfile(id, user);
     }
 
-    public LiveData<Max> fetchMaxId() {
+    public LiveData<Max> getLastId() {
         return fetchUser.fetchMaxId();
     }
-    @Override
-    protected void onCleared() {
-        super.onCleared();
+
+    public LiveData<List<User>> getUserByEmail(String email){
+        return fetchUser.fetchUserByEmail(email);
     }
 
     public LiveData<User> saveUser(User savedUser) {
         return fetchUser.register(savedUser);
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
     }
 
 }

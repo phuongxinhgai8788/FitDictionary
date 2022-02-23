@@ -24,12 +24,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import vn.edu.hanu.fitdictionary.MainActivity;
 import vn.edu.hanu.fitdictionary.R;
-import vn.edu.hanu.fitdictionary.UserHomeFragment;
 import vn.edu.hanu.fitdictionary.data.User;
 import vn.edu.hanu.fitdictionary.data.UserViewModel;
-import vn.edu.hanu.fitdictionary.data.Users;
 import vn.edu.hanu.fitdictionary.helper.CountDownTimer;
 import vn.edu.hanu.fitdictionary.helper.JavaMailAPI;
 import vn.edu.hanu.fitdictionary.helper.RenderFragment;
@@ -75,7 +72,7 @@ public class VerificationCodeFragment extends Fragment {
         }
         verificationCodeViewModel = ViewModelProviders.of(this).get(VerificationCodeViewModel.class);
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-        countDownTimer = new CountDownTimer(60*1000, 1000);
+        countDownTimer = new CountDownTimer(60 * 1000, 1000);
         countDownTimer.setHostFragment(this);
         countDownTimer.start();
 
@@ -92,7 +89,7 @@ public class VerificationCodeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_verification_code, container, false);
+        View view = inflater.inflate(R.layout.fragment_verification_code, container, false);
         okConstraint = view.findViewById(R.id.ok_bar_confirm_code);
         introTV = view.findViewById(R.id.verification_code_was_sent);
         codeET = view.findViewById(R.id.verification_code_et);
@@ -113,37 +110,36 @@ public class VerificationCodeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         okConstraint.setEnabled(false);
 
-        introTV.setText("Verification code was sent to "+user.getEmail()+".Resend request after " +
+        introTV.setText("Verification code was sent to " + user.getEmail() + ".Resend request after " +
                 "60s if you have not received the code yet. Remember to check on Spam!");
         verificationCodeViewModel.isCodeValidate.observe(getViewLifecycleOwner(), data -> {
-            if(!data){
+            if (!data) {
                 alertCodeTV.setVisibility(View.VISIBLE);
                 alertCodeTV.setText("Code must have 6 digits");
-            }
-            else{
+            } else {
                 alertCodeTV.setVisibility(View.INVISIBLE);
             }
         });
         verificationCodeViewModel.isNewPasswordValidate.observe(getViewLifecycleOwner(), data -> {
-            if(!data){
+            if (!data) {
                 alertNewPassTV.setVisibility(View.VISIBLE);
                 alertNewPassTV.setText("Password must have at least 6 characters");
-            } else{
+            } else {
                 alertNewPassTV.setVisibility(View.INVISIBLE);
             }
         });
         verificationCodeViewModel.isConfirmPasswordValidate.observe(getViewLifecycleOwner(), data -> {
-            if(!data){
+            if (!data) {
                 alertConfirmPassTV.setVisibility(View.VISIBLE);
                 alertNewPassTV.setText("Password must have at least 6 characters");
-            }else{
+            } else {
                 alertConfirmPassTV.setVisibility(View.INVISIBLE);
 
             }
         });
         verificationCodeViewModel.isBtnOkValidate.observe(getViewLifecycleOwner(), data -> {
             okConstraint.setEnabled(data);
-            Log.d("VerificationCode", okConstraint.isEnabled()+"");
+            Log.d("VerificationCode", okConstraint.isEnabled() + "");
 
         });
 
@@ -161,7 +157,7 @@ public class VerificationCodeFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 codeEntered = s.toString();
-                verificationCodeViewModel.onCodeChange(s,start, before, count);
+                verificationCodeViewModel.onCodeChange(s, start, before, count);
             }
 
             @Override
@@ -197,7 +193,7 @@ public class VerificationCodeFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 confirmPasswordIV.setImageResource(R.mipmap.ic_hide_pass_foreground);
                 confirmPassEntered = s.toString();
-                 verificationCodeViewModel.onConfirmNewPasswordChange(s, start, before, count);
+                verificationCodeViewModel.onConfirmNewPasswordChange(s, start, before, count);
 
             }
 
@@ -230,55 +226,49 @@ public class VerificationCodeFragment extends Fragment {
         });
 
         okConstraint.setOnClickListener(v -> {
-            if(!codeEntered.equals(codeSent)){
+            if (!codeEntered.equals(codeSent)) {
                 alertCodeTV.setVisibility(View.VISIBLE);
                 alertCodeTV.setText("Code does not match");
-            } else if(!newPassEntered.equals(confirmPassEntered)) {
+            } else if (!newPassEntered.equals(confirmPassEntered)) {
                 alertConfirmPassTV.setVisibility(View.VISIBLE);
                 alertConfirmPassTV.setText("Confirm password does not match");
             } else {
                 user.setPassword(newPassEntered);
-                userViewModel.updateUser(user.getId(),user).observe(getViewLifecycleOwner(), user -> {
-                    if(user!=null){
-                        renderFragment.updateUsers();
-                        userViewModel.fetchUsers().observe(getViewLifecycleOwner(), users -> {
-                            if(users!=null){
-                                LoginFragment loginFragment = LoginFragment.newInstance(new Users(users));
-                                renderFragment.openFragment(loginFragment, false);
+                userViewModel.updateUser(user.getId(), user).observe(getViewLifecycleOwner(), user -> {
+                    if (user != null) {
+                        LoginFragment loginFragment = LoginFragment.newInstance();
+                        renderFragment.openFragment(loginFragment, false);
 
-                            }
-                        });
                     }
                 });
-                }
-
-        });
-    }
-
-    public void onCountDownTimerTickEvent(long millisUntilFinished) {
-        long leftSeconds = millisUntilFinished / 1000;
-        String countBtnText = "Resend after "+leftSeconds+" s";
-        countConstraint.setEnabled(false);
-        countTV.setText(countBtnText);
-        countTV.setTextColor(Color.BLACK);
-    }
-
-    public void onCountDownTimerFinishEvent() {
-        countTV.setEnabled(true);
-        countTV.setText("Resend");
-        this.countTV.setOnClickListener(v -> {
-            codeSent = "";
-            for(int i=0; i<6;i++){
-                int randomDigit = (int) ( 10*Math.random());
-                codeSent+=randomDigit;
             }
-            String emailBody = "Dear "+user.getEmail()+",\n We got a request to reset your FIT Dictionary " +
-                    "password. Please copy and paste the Verification Code below on your FIT App.\n"+codeSent;
-            String subject = "FIT verification code";
-            JavaMailAPI javaMailAPI = new JavaMailAPI(context, user.getEmail(), subject, emailBody);
-            javaMailAPI.execute();
-            Toast.makeText(context, "Send email successfully", Toast.LENGTH_SHORT).show();
-            countDownTimer.start();
         });
     }
-}
+
+        public void onCountDownTimerTickEvent ( long millisUntilFinished){
+            long leftSeconds = millisUntilFinished / 1000;
+            String countBtnText = "Resend after " + leftSeconds + " s";
+            countConstraint.setEnabled(false);
+            countTV.setText(countBtnText);
+            countTV.setTextColor(Color.BLACK);
+        }
+
+        public void onCountDownTimerFinishEvent () {
+            countTV.setEnabled(true);
+            countTV.setText("Resend");
+            this.countTV.setOnClickListener(v -> {
+                codeSent = "";
+                for (int i = 0; i < 6; i++) {
+                    int randomDigit = (int) (10 * Math.random());
+                    codeSent += randomDigit;
+                }
+                String emailBody = "Dear " + user.getEmail() + ",\n We got a request to reset your FIT Dictionary " +
+                        "password. Please copy and paste the Verification Code below on your FIT App.\n" + codeSent;
+                String subject = "FIT verification code";
+                JavaMailAPI javaMailAPI = new JavaMailAPI(context, user.getEmail(), subject, emailBody);
+                javaMailAPI.execute();
+                Toast.makeText(context, "Send email successfully", Toast.LENGTH_SHORT).show();
+                countDownTimer.start();
+            });
+        }
+    }

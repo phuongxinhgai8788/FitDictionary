@@ -11,14 +11,14 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface FitApi {
-    @GET("/users")
-    public Call<List<User>> fetchUsers();
-
-    @GET("/users/id/{id}")
-    public Call<User> fetchUserById(@Path("id") int id);
+//    @GET("/users")
+//    public Call<List<User>> fetchUsers();
+//
+//    @GET("/users/id/{id}")
+//    public Call<User> fetchUserById(@Path("id") int id);
 
     @GET("/users/email/{email}")
-    public Call<User> fetchUserByEmail(@Path("String") String email);
+    public Call<List<User>> fetchUserByEmail(@Path("email") String email);
 
     @POST("/users")
     public Call<User> register(@Body User user);

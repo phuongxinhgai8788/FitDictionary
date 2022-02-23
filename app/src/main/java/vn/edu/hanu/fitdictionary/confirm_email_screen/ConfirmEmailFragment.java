@@ -24,6 +24,7 @@ import java.util.List;
 
 import vn.edu.hanu.fitdictionary.R;
 import vn.edu.hanu.fitdictionary.data.User;
+import vn.edu.hanu.fitdictionary.data.UserViewModel;
 import vn.edu.hanu.fitdictionary.helper.JavaMailAPI;
 import vn.edu.hanu.fitdictionary.helper.RenderFragment;
 import vn.edu.hanu.fitdictionary.verification_code_screen.VerificationCodeFragment;
@@ -38,7 +39,7 @@ public class ConfirmEmailFragment extends Fragment {
     private Context context;
     private ConfirmEmailViewModel confirmEmailViewModel;
     private RenderFragment renderFragment;
-    private List<User> users;
+    private UserViewModel userViewModel;
     private User user;
 
     public ConfirmEmailFragment() {
@@ -62,7 +63,7 @@ public class ConfirmEmailFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         confirmEmailViewModel = ViewModelProviders.of(this).get(ConfirmEmailViewModel.class);
-        users = renderFragment.getUsers().getUsers();
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
     }
 
     @Override
@@ -129,34 +130,19 @@ public class ConfirmEmailFragment extends Fragment {
     }
 
     private void confirmUser() {
-//        userViewModel.fetchUserByEmail(emailEntered).observe(getViewLifecycleOwner(), user -> {
-//
-//            if (user == null) {
-//
-//                Toast.makeText(context, "Account does not exist", Toast.LENGTH_SHORT).show();
-//            } else {
-//                this.user = user;
-//                sendEmail();
-//                VerificationCodeFragment verificationCodeFragment = VerificationCodeFragment.newInstance(user, code);
-//                RenderFragment renderFragment = (RenderFragment) context;
-//                renderFragment.openFragment(verificationCodeFragment, true);
-//            }
-//        });
-        boolean isEmailExist = false;
-        for(User user1:users){
-            if(emailEntered.equals(user1.getEmail())){
-                isEmailExist = true;
-                this.user = user1;
-            }
-        }
-        if(!isEmailExist){
-            Toast.makeText(context, "Email does not exist", Toast.LENGTH_SHORT).show();
-        }else{
-            sendEmail();
-            VerificationCodeFragment verificationCodeFragment = VerificationCodeFragment.newInstance(user, code);
-            renderFragment.openFragment(verificationCodeFragment, true);
+        userViewModel.getUserByEmail(emailEntered).observe(getViewLifecycleOwner(), user -> {
 
-        }
+            if (user == null) {
+
+                Toast.makeText(context, "Account does not exist", Toast.LENGTH_SHORT).show();
+            } else {
+                this.user = user.get(0);
+                sendEmail();
+                VerificationCodeFragment verificationCodeFragment = VerificationCodeFragment.newInstance(this.user, code);
+                RenderFragment renderFragment = (RenderFragment) context;
+                renderFragment.openFragment(verificationCodeFragment, true);
+            }
+        });
     }
 
     private void sendEmail() {

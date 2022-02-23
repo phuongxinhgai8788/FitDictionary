@@ -28,59 +28,59 @@ public class FetchUser {
         fitApi = retrofit.create(FitApi.class);
     }
 
-    public LiveData<List<User>> fetchUsers(){
+//    public LiveData<List<User>> fetchUsers(){
+//        MutableLiveData<List<User>> responseLiveData = new MutableLiveData<>();
+//        Call<List<User>> userRequest = fitApi.fetchUsers();
+//        userRequest.enqueue(new Callback<List<User>>() {
+//            @Override
+//            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+//                Log.d(TAG, "Users response received");
+//                List<User> users = response.body();
+//                responseLiveData.setValue(users);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<User>> call, Throwable t) {
+//
+//                Log.d(TAG, "Failed to fetch users", t);
+//            }
+//        });
+//        return responseLiveData;
+//    }
+//
+//    public LiveData<User> fetchUserByID(int id){
+//        MutableLiveData<User> responseLiveData = new MutableLiveData<>();
+//        Call<User> userRequest = fitApi.fetchUserById(id);
+//        userRequest.enqueue(new Callback<User>() {
+//            @Override
+//            public void onResponse(Call<User> call, Response<User> response) {
+//                Log.d(TAG, "User response received: "+response.body());
+//                User user = response.body();
+//                responseLiveData.setValue(user);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<User> call, Throwable t) {
+//
+//                Log.d(TAG, "Failed to fetch user", t);
+//            }
+//        });
+//        return responseLiveData;
+//    }
+
+    public LiveData<List<User>> fetchUserByEmail(String email){
         MutableLiveData<List<User>> responseLiveData = new MutableLiveData<>();
-        Call<List<User>> userRequest = fitApi.fetchUsers();
+        Call<List<User>> userRequest = fitApi.fetchUserByEmail(email);
         userRequest.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                Log.d(TAG, "Users response received");
-                List<User> users = response.body();
-                responseLiveData.setValue(users);
+                Log.d(TAG, "User response received: "+response.body());
+                List<User> user = response.body();
+                responseLiveData.setValue(user);
             }
 
             @Override
             public void onFailure(Call<List<User>> call, Throwable t) {
-
-                Log.d(TAG, "Failed to fetch users", t);
-            }
-        });
-        return responseLiveData;
-    }
-
-    public LiveData<User> fetchUserByID(int id){
-        MutableLiveData<User> responseLiveData = new MutableLiveData<>();
-        Call<User> userRequest = fitApi.fetchUserById(id);
-        userRequest.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                Log.d(TAG, "User response received: "+response.body());
-                User user = response.body();
-                responseLiveData.setValue(user);
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-
-                Log.d(TAG, "Failed to fetch user", t);
-            }
-        });
-        return responseLiveData;
-    }
-
-    public LiveData<User> fetchUserByEmail(String email){
-        MutableLiveData<User> responseLiveData = new MutableLiveData<>();
-        Call<User> userRequest = fitApi.fetchUserByEmail(email);
-        userRequest.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                Log.d(TAG, "User response received: "+response.body());
-                User user = response.body();
-                responseLiveData.setValue(user);
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
 
                 Log.d(TAG, "Failed to fetch user", t);
             }
