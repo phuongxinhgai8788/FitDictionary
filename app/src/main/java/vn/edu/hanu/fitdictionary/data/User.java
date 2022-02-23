@@ -3,6 +3,7 @@ package vn.edu.hanu.fitdictionary.data;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -11,18 +12,23 @@ import java.util.Objects;
 public class User implements Serializable {
 
     @SerializedName("id")
+    @Expose
     private int id;
 
     @SerializedName("email")
+    @Expose
     private String email;
 
     @SerializedName("full_name")
+    @Expose
     private String fullName;
 
     @SerializedName("password")
+    @Expose
     private String password;
 
     @SerializedName("role")
+    @Expose
     private String role;
 
     public User(){
@@ -96,6 +102,6 @@ public class User implements Serializable {
     @Override
     public String toString(){
         String[] userHanuId = email.split("@");
-        return this.getFullName()+" - "+userHanuId[0];
+        return this.getId()+" : "+this.getFullName()+" - "+userHanuId[0];
     }
 }

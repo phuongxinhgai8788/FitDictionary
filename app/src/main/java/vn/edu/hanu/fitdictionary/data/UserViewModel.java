@@ -29,6 +29,9 @@ public class UserViewModel extends ViewModel {
         return fetchUser.updateProfile(id, user);
     }
 
+    public LiveData<Max> fetchMaxId() {
+        return fetchUser.fetchMaxId();
+    }
     @Override
     protected void onCleared() {
         super.onCleared();

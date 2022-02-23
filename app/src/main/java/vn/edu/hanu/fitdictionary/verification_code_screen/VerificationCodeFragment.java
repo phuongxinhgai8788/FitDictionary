@@ -75,6 +75,10 @@ public class VerificationCodeFragment extends Fragment {
         }
         verificationCodeViewModel = ViewModelProviders.of(this).get(VerificationCodeViewModel.class);
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        countDownTimer = new CountDownTimer(60*1000, 1000);
+        countDownTimer.setHostFragment(this);
+        countDownTimer.start();
+
     }
 
     @Override
@@ -142,14 +146,12 @@ public class VerificationCodeFragment extends Fragment {
             Log.d("VerificationCode", okConstraint.isEnabled()+"");
 
         });
-        countDownTimer = new CountDownTimer(60*1000, 1000);
-        countDownTimer.setHostFragment(this);
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        countDownTimer.start();
         codeET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -256,6 +258,7 @@ public class VerificationCodeFragment extends Fragment {
     public void onCountDownTimerTickEvent(long millisUntilFinished) {
         long leftSeconds = millisUntilFinished / 1000;
         String countBtnText = "Resend after "+leftSeconds+" s";
+        countConstraint.setEnabled(false);
         countTV.setText(countBtnText);
         countTV.setTextColor(Color.BLACK);
     }
@@ -263,7 +266,6 @@ public class VerificationCodeFragment extends Fragment {
     public void onCountDownTimerFinishEvent() {
         countTV.setEnabled(true);
         countTV.setText("Resend");
-        countConstraint.setBackground(this.getResources().getDrawable(R.drawable.background_gradient));
         this.countTV.setOnClickListener(v -> {
             codeSent = "";
             for(int i=0; i<6;i++){

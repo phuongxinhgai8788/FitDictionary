@@ -93,7 +93,7 @@ public class FetchUser {
         userRequest.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                Log.d(TAG, "Register user response received: "+response.body());
+                Log.d(TAG, "Register user response received: "+response);
                 User user = response.body();
                 responseLiveData.setValue(user);
             }
@@ -121,6 +121,26 @@ public class FetchUser {
             public void onFailure(Call<User> call, Throwable t) {
 
                 Log.d(TAG, "Failed to update user", t);
+            }
+        });
+        return responseLiveData;
+    }
+
+    public LiveData<Max> fetchMaxId (){
+        MutableLiveData<Max> responseLiveData = new MutableLiveData<>();
+        Call<Max> userRequest = fitApi.fetchMaxId();
+        userRequest.enqueue(new Callback<Max>() {
+            @Override
+            public void onResponse(Call<Max> call, Response<Max> response) {
+                Log.d(TAG, "Get last id response received: "+response.body());
+                Max max = response.body();
+                responseLiveData.setValue(max);
+            }
+
+            @Override
+            public void onFailure(Call<Max> call, Throwable t) {
+
+                Log.d(TAG, "Failed to get last user", t);
             }
         });
         return responseLiveData;

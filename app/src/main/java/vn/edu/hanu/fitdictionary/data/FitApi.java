@@ -26,4 +26,8 @@ public interface FitApi {
     @PUT("/users/{id}")
     public Call<User> updateProfile(@Path("id") int id, @Body User user);
 
+    @GET("/users/last")
+    public Call<Max> fetchMaxId();
+
+
 }

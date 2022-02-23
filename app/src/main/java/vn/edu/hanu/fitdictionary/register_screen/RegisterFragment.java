@@ -48,6 +48,7 @@ public class RegisterFragment extends Fragment {
     private RenderFragment renderFragment;
     private static final String USERS = "users";
     private Users users;
+    private int maxID;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -116,6 +117,7 @@ public class RegisterFragment extends Fragment {
         });
         registerViewModel.isBtnSignUpValidate.observe(getViewLifecycleOwner(), data -> {
             signUpConstraint.setEnabled(data);
+            Log.d("Register", signUpConstraint.isEnabled()+"");
 
         });
     }
@@ -220,14 +222,20 @@ public class RegisterFragment extends Fragment {
             user.setEmail(emailEntered);
             user.setFullName(fullNameEntered);
             user.setPassword(passwordEntered);
-            userViewModel.saveUser(user).observe(getViewLifecycleOwner(), savedUser -> {
-                if(savedUser!=null){
-                    RenderFragment renderFragment = (RenderFragment) context;
-                    renderFragment.updateUsers();
-                    userViewModel.fetchUsers().observe(getViewLifecycleOwner(),fetchedUsers -> {
-                        if(fetchedUsers!=null){
-                            LoginFragment loginFragment = LoginFragment.newInstance(new Users(fetchedUsers));
-                            renderFragment.openFragment(loginFragment, true);
+            userViewModel.fetchMaxId().observe(getViewLifecycleOwner(), max -> {
+                if(max!=null){
+                    maxID = max.getMax();
+                    user.setId(maxID+1);
+                    userViewModel.saveUser(user).observe(getViewLifecycleOwner(), savedUser -> {
+                        if(savedUser!=null){
+                            RenderFragment renderFragment = (RenderFragment) context;
+                            renderFragment.updateUsers();
+                            userViewModel.fetchUsers().observe(getViewLifecycleOwner(),fetchedUsers -> {
+                                if(fetchedUsers!=null){
+                                    LoginFragment loginFragment = LoginFragment.newInstance(new Users(fetchedUsers));
+                                    renderFragment.openFragment(loginFragment, true);
+                                }
+                            });
                         }
                     });
                 }
