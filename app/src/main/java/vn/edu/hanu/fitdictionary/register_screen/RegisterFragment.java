@@ -1,5 +1,7 @@
 package vn.edu.hanu.fitdictionary.register_screen;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -34,14 +36,12 @@ import vn.edu.hanu.fitdictionary.helper.RenderFragment;
 public class RegisterFragment extends Fragment {
     private ConstraintLayout signUpConstraint;
     private EditText emailET, passwordET, fullNameET;
-    private TextView alertEmailTV, alertPasswordTV, logInTV;
+    private TextView alertEmailTV, alertPasswordTV, logInTV, signUpTV;
     private ImageView seePassIV;
-    private ScrollView scrollView;
     private String emailEntered, passwordEntered, fullNameEntered;
     private RegisterViewModel registerViewModel;
     private UserViewModel userViewModel;
     private Context context;
-    private RenderFragment renderFragment;
     private int maxID;
 
     public RegisterFragment() {
@@ -65,7 +65,6 @@ public class RegisterFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
-        this.renderFragment = (RenderFragment) context;
     }
 
     @Override
@@ -81,6 +80,7 @@ public class RegisterFragment extends Fragment {
         alertEmailTV = view.findViewById(R.id.alert_email_signup);
         alertPasswordTV = view.findViewById(R.id.alert_password_signup);
         logInTV = view.findViewById(R.id.login_switch);
+        signUpTV = view.findViewById(R.id.signup_tv);
         return view;
     }
 
@@ -94,18 +94,33 @@ public class RegisterFragment extends Fragment {
                 alertEmailTV.setText("Hanu email format @s.hanu.edu.vn is required");
             }else{
                 alertEmailTV.setVisibility(View.INVISIBLE);
+                registerViewModel.validateBtnSignUp();
             }
         });
         registerViewModel.isPasswordValidate.observe(getViewLifecycleOwner(), data -> {
             if(!data){
+                alertPasswordTV.setVisibility(View.VISIBLE);
                 alertPasswordTV.setText("Password must have more than 5 characters");
             }else {
                 alertPasswordTV.setVisibility(View.INVISIBLE);
+                registerViewModel.validateBtnSignUp();
+            }
+        });
+        registerViewModel.isFullNameValidate.observe(getViewLifecycleOwner(), data -> {
+            if(data){
+                registerViewModel.validateBtnSignUp();
             }
         });
         registerViewModel.isBtnSignUpValidate.observe(getViewLifecycleOwner(), data -> {
-            signUpConstraint.setEnabled(data);
-            Log.d("Register", signUpConstraint.isEnabled()+"");
+           if(data){
+               signUpConstraint.setEnabled(true);
+               signUpConstraint.setBackgroundResource(R.drawable.background_gradient);
+               signUpTV.setTextColor(getResources().getColor(R.color.white));
+           } else {
+               signUpConstraint.setEnabled(false);
+               signUpConstraint.setBackgroundResource(R.drawable.background_button);
+               signUpTV.setTextColor(getResources().getColor(R.color.gray));
+           }
 
         });
     }
@@ -190,9 +205,13 @@ public class RegisterFragment extends Fragment {
     }
 
     private void confirmUser() {
-
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_background);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         userViewModel.getUserByEmail(emailEntered).observe(getViewLifecycleOwner(), user -> {
+            progressDialog.dismiss();
             if(user!=null && user.size()>0){
             Toast.makeText(context, "User exists. Login or reset password", Toast.LENGTH_SHORT).show();
 

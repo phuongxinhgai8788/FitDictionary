@@ -19,17 +19,20 @@ public class VerificationCodeViewModel extends ViewModel {
     public void onCodeChange(CharSequence s, int start, int before, int count){
         String code = s.toString();
         _isCodeValidate.postValue(code.length()==6 && code.matches("[0-9]+"));
-        _isBtnOkValidate.setValue(_isCodeValidate.getValue() !=null && _isCodeValidate.getValue() && _isNewPasswordValidate.getValue() !=null && _isNewPasswordValidate.getValue() && _isConfirmPasswordValidate.getValue()!=null && _isConfirmPasswordValidate.getValue());
+        validateBtnOk();
     }
     public void onNewPasswordChange(CharSequence s, int start, int before, int count){
         String newPassword = s.toString();
         _isNewPasswordValidate.postValue(newPassword.length() >= 6);
-        _isBtnOkValidate.setValue(_isCodeValidate.getValue() !=null && _isCodeValidate.getValue() && _isNewPasswordValidate.getValue() !=null && _isNewPasswordValidate.getValue() && _isConfirmPasswordValidate.getValue()!=null && _isConfirmPasswordValidate.getValue());
-        
+        validateBtnOk();
     }
     public void onConfirmNewPasswordChange(CharSequence s, int start, int before, int count){
         String password = s.toString();
         _isConfirmPasswordValidate.postValue(password.length()>=6);
+        validateBtnOk();
+    }
+    public void validateBtnOk(){
         _isBtnOkValidate.setValue(_isCodeValidate.getValue() !=null && _isCodeValidate.getValue() && _isNewPasswordValidate.getValue() !=null && _isNewPasswordValidate.getValue() && _isConfirmPasswordValidate.getValue()!=null && _isConfirmPasswordValidate.getValue());
+
     }
 }

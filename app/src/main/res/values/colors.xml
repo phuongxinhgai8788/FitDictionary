@@ -14,5 +14,7 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#6200EE</color>
     <color name="colorAccent">#000000</color>
-    <color name="nice">#e67d20</color>
+    <color name="nice">#D6D9E5</color>
+    <color name="gray">#757989</color>
+    <color name="shrine_pink_100">#ffc0cb</color>
 </resources>

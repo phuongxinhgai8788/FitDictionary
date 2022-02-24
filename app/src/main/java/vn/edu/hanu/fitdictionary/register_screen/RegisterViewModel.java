@@ -20,19 +20,21 @@ public class RegisterViewModel extends ViewModel {
     public void onEmailChanged(CharSequence s, int start, int before, int count) {
         String email = s.toString();
         _isEmailValidate.postValue(email.matches(EMAIL_FORMAT));
-        _isBtnSignUpValidate.setValue(_isEmailValidate.getValue() != null && _isEmailValidate.getValue() && _isPasswordValidate.getValue() != null && _isPasswordValidate.getValue() && _isFullNameValidate.getValue() && _isFullNameValidate.getValue()!=null);
-
+        validateBtnSignUp();
     }
 
     public void onPasswordChanged(CharSequence s, int start, int before, int count) {
         String password = s.toString();
         _isPasswordValidate.postValue(password.length() >= 6);
-        _isBtnSignUpValidate.setValue(_isEmailValidate.getValue() != null && _isEmailValidate.getValue() && _isPasswordValidate.getValue() != null && _isPasswordValidate.getValue()&& _isFullNameValidate.getValue() && _isFullNameValidate.getValue()!=null);
+        validateBtnSignUp();
     }
 
     public void onFullNameChange(CharSequence s, int start, int before, int count) {
         String fullName = s.toString();
         _isFullNameValidate.postValue(fullName.length()>0);
+        validateBtnSignUp();
+    }
+    public void validateBtnSignUp(){
         _isBtnSignUpValidate.setValue(_isEmailValidate.getValue() != null && _isEmailValidate.getValue() && _isPasswordValidate.getValue() != null && _isPasswordValidate.getValue() && _isFullNameValidate.getValue() && _isFullNameValidate.getValue()!=null);
 
     }

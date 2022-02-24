@@ -1,5 +1,7 @@
 package vn.edu.hanu.fitdictionary.login_screen;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -14,6 +16,7 @@ import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.text.method.TransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +38,7 @@ public class LoginFragment extends Fragment {
 
     private ConstraintLayout loginConstraint;
     private EditText emailET, passwordET;
-    private TextView forgotPassTV, alertEmailTV, signUpTV;
+    private TextView forgotPassTV, alertEmailTV, signUpTV, logInTV;
     private ImageView passwordIV;
     private Context context;
     private RenderFragment renderFragment;
@@ -78,6 +81,7 @@ public class LoginFragment extends Fragment {
         alertEmailTV = view.findViewById(R.id.alert_login);
         passwordIV = view.findViewById(R.id.see_pass_login);
         signUpTV = view.findViewById(R.id.signup_switch);
+        logInTV = view.findViewById(R.id.login_tv);
         return view;
     }
 
@@ -92,6 +96,7 @@ public class LoginFragment extends Fragment {
                 alertEmailTV.setText("Hanu email format @s.hanu.edu.vn is required");
             } else{
                 alertEmailTV.setVisibility(View.INVISIBLE);
+                loginViewModel.validateBtnLogin();
             }
         });
 
@@ -101,11 +106,21 @@ public class LoginFragment extends Fragment {
                 alertEmailTV.setText("Password must have more than 5 characters");
             }else{
                 alertEmailTV.setVisibility(View.INVISIBLE);
+                loginViewModel.validateBtnLogin();
             }
         });
 
         loginViewModel.isBtnLoginValidate.observe(getViewLifecycleOwner(), data -> {
-            loginConstraint.setEnabled(data);
+            if(data){
+                loginConstraint.setEnabled(true);
+                loginConstraint.setBackgroundResource(R.drawable.background_gradient);
+                logInTV.setTextColor(getResources().getColor(R.color.white));
+            }else {
+                loginConstraint.setEnabled(false);
+                loginConstraint.setBackgroundResource(R.drawable.background_button);
+                logInTV.setTextColor(getResources().getColor(R.color.gray));
+
+            }
         });
     }
 
@@ -178,8 +193,13 @@ public class LoginFragment extends Fragment {
     }
 
     private void confirmUser() {
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_background);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         userViewModel.getUserByEmail(emailEntered).observe(getViewLifecycleOwner(), user -> {
+            progressDialog.dismiss();
             if(user==null){
                 Toast.makeText(context,"User does not exist", Toast.LENGTH_SHORT).show();
             }else{

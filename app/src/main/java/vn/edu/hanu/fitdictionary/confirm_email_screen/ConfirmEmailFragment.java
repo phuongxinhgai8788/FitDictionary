@@ -1,5 +1,7 @@
 package vn.edu.hanu.fitdictionary.confirm_email_screen;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.text.Editable;
@@ -17,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +37,7 @@ import vn.edu.hanu.fitdictionary.verification_code_screen.VerificationCodeFragme
 public class ConfirmEmailFragment extends Fragment {
 
     private EditText emailET;
-    private TextView alertTV, cancelTV;
+    private TextView alertTV, cancelTV, sendTV;
     private ConstraintLayout sendConstraint;
     private String emailEntered, code;
     private Context context;
@@ -75,9 +79,11 @@ public class ConfirmEmailFragment extends Fragment {
         sendConstraint = view.findViewById(R.id.reset_pass_bar);
         alertTV = view.findViewById(R.id.alert_forgot_pass);
         cancelTV = view.findViewById(R.id.cancel_reset_password);
+        sendTV = view.findViewById(R.id.send_tv);
         return view;
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -93,7 +99,16 @@ public class ConfirmEmailFragment extends Fragment {
             }
         });
         confirmEmailViewModel.isEmailValidate.observe(getViewLifecycleOwner(), data -> {
-            sendConstraint.setEnabled(data);
+            if(data){
+                sendConstraint.setEnabled(true);
+                sendConstraint.setBackgroundResource(R.drawable.background_gradient);
+                sendTV.setTextColor(getResources().getColor(R.color.white));
+            }
+            else{
+                sendConstraint.setEnabled(false);
+                sendConstraint.setBackgroundResource(R.drawable.background_button);
+                sendTV.setTextColor(getResources().getColor(R.color.gray));
+            }
         });
     }
 
@@ -130,8 +145,14 @@ public class ConfirmEmailFragment extends Fragment {
     }
 
     private void confirmUser() {
-        userViewModel.getUserByEmail(emailEntered).observe(getViewLifecycleOwner(), user -> {
 
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_background);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        userViewModel.getUserByEmail(emailEntered).observe(getViewLifecycleOwner(), user -> {
+            progressDialog.dismiss();
             if (user == null) {
 
                 Toast.makeText(context, "Account does not exist", Toast.LENGTH_SHORT).show();

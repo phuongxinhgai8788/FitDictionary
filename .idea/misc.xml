@@ -32,6 +32,7 @@
         <entry key="..\:/Fit_Dictionary/app/src/main/res/layout/activity_splash_screen.xml" value="0.1015625" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable-v24/rounded_corner.xml" value="0.19583333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable/background.xml" value="0.1" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable/background_back_btn_login.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable/background_back_constraint.xml" value="0.1" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable/background_button.xml" value="0.19583333333333333" />
@@ -40,6 +41,7 @@
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable/background_gradient.xml" value="0.13148148148148148" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable/background_login_bar.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable/background_prev_btn.xml" value="0.2197265625" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable/background_round.xml" value="0.1" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable/background_splash.xml" value="0.18177083333333333" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable/ic_baseline_navigate_next_24.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/drawable/ic_fit_symbol_background.xml" value="0.19583333333333333" />
@@ -57,6 +59,8 @@
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/layout/fragment_login.xml" value="0.1" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/layout/fragment_register.xml" value="0.24202127659574468" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/layout/fragment_verification_code.xml" value="0.25277777777777777" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/layout/progress_background.xml" value="0.1796875" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/layout/progress_dialog.xml" value="0.1" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/mipmap-anydpi-v26/ic_fit_symbol.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/mipmap-anydpi-v26/ic_fit_symbol_round.xml" value="0.1" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/FitDictionary/app/src/main/res/mipmap-anydpi-v26/ic_hide_pass_round.xml" value="0.1" />
@@ -67,7 +71,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

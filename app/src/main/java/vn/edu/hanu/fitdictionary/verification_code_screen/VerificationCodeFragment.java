@@ -1,5 +1,8 @@
 package vn.edu.hanu.fitdictionary.verification_code_screen;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -40,7 +43,7 @@ public class VerificationCodeFragment extends Fragment {
 
     private User user;
     private ConstraintLayout okConstraint, countConstraint;
-    private TextView introTV, alertCodeTV, countTV, alertNewPassTV, alertConfirmPassTV;
+    private TextView introTV, alertCodeTV, countTV, alertNewPassTV, alertConfirmPassTV, OKTV;
     private String codeSent, codeEntered, newPassEntered, confirmPassEntered;
     private EditText codeET, newPasswordET, confirmPasswordET;
     private ImageView newPasswordIV, confirmPasswordIV;
@@ -102,6 +105,7 @@ public class VerificationCodeFragment extends Fragment {
         alertConfirmPassTV = view.findViewById(R.id.alert_confirm_password);
         countConstraint = view.findViewById(R.id.count_constraint_confirm_code);
         countTV = view.findViewById(R.id.count_tv_confirm_code);
+        OKTV = view.findViewById(R.id.ok_tv);
         return view;
     }
 
@@ -118,6 +122,8 @@ public class VerificationCodeFragment extends Fragment {
                 alertCodeTV.setText("Code must have 6 digits");
             } else {
                 alertCodeTV.setVisibility(View.INVISIBLE);
+                verificationCodeViewModel.validateBtnOk();
+
             }
         });
         verificationCodeViewModel.isNewPasswordValidate.observe(getViewLifecycleOwner(), data -> {
@@ -126,21 +132,29 @@ public class VerificationCodeFragment extends Fragment {
                 alertNewPassTV.setText("Password must have at least 6 characters");
             } else {
                 alertNewPassTV.setVisibility(View.INVISIBLE);
+                verificationCodeViewModel.validateBtnOk();
             }
         });
         verificationCodeViewModel.isConfirmPasswordValidate.observe(getViewLifecycleOwner(), data -> {
             if (!data) {
                 alertConfirmPassTV.setVisibility(View.VISIBLE);
-                alertNewPassTV.setText("Password must have at least 6 characters");
+                alertConfirmPassTV.setText("Password must have at least 6 characters");
             } else {
                 alertConfirmPassTV.setVisibility(View.INVISIBLE);
+                verificationCodeViewModel.validateBtnOk();
 
             }
         });
         verificationCodeViewModel.isBtnOkValidate.observe(getViewLifecycleOwner(), data -> {
-            okConstraint.setEnabled(data);
-            Log.d("VerificationCode", okConstraint.isEnabled() + "");
-
+            if(data){
+                okConstraint.setEnabled(true);
+                okConstraint.setBackgroundResource(R.drawable.background_gradient);
+                OKTV.setTextColor(getResources().getColor(R.color.white));
+            }else{
+                okConstraint.setEnabled(false);
+                okConstraint.setBackgroundResource(R.drawable.background_button);
+                OKTV.setTextColor(getResources().getColor(R.color.gray));
+            }
         });
 
     }
@@ -234,7 +248,13 @@ public class VerificationCodeFragment extends Fragment {
                 alertConfirmPassTV.setText("Confirm password does not match");
             } else {
                 user.setPassword(newPassEntered);
+                ProgressDialog progressDialog = new ProgressDialog(context);
+                progressDialog.show();
+                progressDialog.setContentView(R.layout.progress_background);
+                progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
                 userViewModel.updateUser(user.getId(), user).observe(getViewLifecycleOwner(), user -> {
+                    progressDialog.dismiss();
                     if (user != null) {
                         LoginFragment loginFragment = LoginFragment.newInstance();
                         renderFragment.openFragment(loginFragment, false);
