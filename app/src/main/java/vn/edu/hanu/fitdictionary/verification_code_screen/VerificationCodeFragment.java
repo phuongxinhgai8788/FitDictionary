@@ -284,7 +284,7 @@ public class VerificationCodeFragment extends Fragment {
                 }
                 String emailBody = "Dear " + user.getEmail() + ",\n We got a request to reset your FIT Dictionary " +
                         "password. Please copy and paste the Verification Code below on your FIT App.\n" + codeSent;
-                String subject = "FIT verification code";
+                String subject = "FIT Dictionary verification code";
                 JavaMailAPI javaMailAPI = new JavaMailAPI(context, user.getEmail(), subject, emailBody);
                 javaMailAPI.execute();
                 Toast.makeText(context, "Send email successfully", Toast.LENGTH_SHORT).show();
